@@ -56,3 +56,10 @@ Whether you're an individual developer or part of a larger team, Next.js can hel
 
 By default all pages are server side renderig- means when we try to use hooks in our component then its through an errror. for solve this error we use 
 "use client". That means this component is client side rendering.
+
+
+---------------------------------------------------------------------------------------------------------------
+how make dynamic routes??
+if we want to create dynamic route. we know in nextjs use folder routing. just like inn service have to folder 1.admin 2.user both have page.js 
+file thats mean /service/admin && /service/user  and service folder have a page.js that mean we also access /service.
+
