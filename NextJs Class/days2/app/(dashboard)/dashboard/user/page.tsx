@@ -11,8 +11,6 @@ const page = ()=>{
             <Link href="/dashboard/user/3"><li>user 3</li></Link>
             <Link href="/dashboard/user/4"><li>user 4</li></Link>
         </ul>
-
-
      </div>
     </>
 }

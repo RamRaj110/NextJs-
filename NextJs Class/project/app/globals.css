@@ -1,59 +1,191 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-/* 1. Define your Dark Theme Variables */
-@theme {
-  /* -- Backgrounds -- */
-  --color-bg-main: #09090b;   /* Very dark zinc */
-  --color-bg-card: #18181b;   /* Slightly lighter zinc for cards */
-  --color-bg-input: #27272a;  /* Input field background */
+@custom-variant dark (&:is(.dark *));
 
-  /* -- Text Colors -- */
-  --color-text-head: #f4f4f5; /* Almost white (for Headings) */
-  --color-text-body: #a1a1aa; /* Muted grey (for Paragraphs) */
+/* 1. Define the Theme Variables */
+/* These are the actual values that switch */
+:root {
+  /* LIGHT MODE Defaults */ /* Slate-900 */
 
-  /* -- Brand Colors (The Neon Pop) -- */
-  --color-primary: #8b5cf6;   /* Violet-500 */
-  --color-primary-hover: #7c3aed; 
-  --color-accent: #2dd4bf;    /* Teal-400 */
+  --card: oklch(1 0 0);       /* Slate-50 */
+  --card-foreground: oklch(0.129 0.042 264.695);
+
+  --primary: oklch(0.208 0.042 265.755);    /* Indigo-600 */
+  --primary-foreground: oklch(0.984 0.003 247.858);
+
+  --border: oklch(0.929 0.013 255.508);     /* Slate-200 */
+  --input: oklch(0.929 0.013 255.508);
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.129 0.042 264.695);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.129 0.042 264.695);
+  --secondary: oklch(0.968 0.007 247.896);
+  --secondary-foreground: oklch(0.208 0.042 265.755);
+  --muted: oklch(0.968 0.007 247.896);
+  --muted-foreground: oklch(0.554 0.046 257.417);
+  --accent: oklch(0.968 0.007 247.896);
+  --accent-foreground: oklch(0.208 0.042 265.755);
+  --destructive: oklch(0.577 0.245 27.325);
+  --ring: oklch(0.704 0.04 256.788);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.984 0.003 247.858);
+  --sidebar-foreground: oklch(0.129 0.042 264.695);
+  --sidebar-primary: oklch(0.208 0.042 265.755);
+  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-accent: oklch(0.968 0.007 247.896);
+  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
+  --sidebar-border: oklch(0.929 0.013 255.508);
+  --sidebar-ring: oklch(0.704 0.04 256.788);
 }
 
-/* 2. Apply Defaults to the Body */
+/* DARK MODE Overrides */
+.dark {
+  --background: oklch(0.129 0.042 264.695); /* Zinc-950 */
+  --foreground: oklch(0.984 0.003 247.858); /* Zinc-100 */
+
+  --card: oklch(0.208 0.042 265.755);       /* Zinc-900 */
+  --card-foreground: oklch(0.984 0.003 247.858);
+
+  --primary: oklch(0.929 0.013 255.508);    /* Violet-500 (Brighter pop for dark mode) */
+  --primary-foreground: oklch(0.208 0.042 265.755);
+
+  --border: oklch(1 0 0 / 10%);     /* Zinc-800 */
+  --input: oklch(1 0 0 / 15%);
+  --popover: oklch(0.208 0.042 265.755);
+  --popover-foreground: oklch(0.984 0.003 247.858);
+  --secondary: oklch(0.279 0.041 260.031);
+  --secondary-foreground: oklch(0.984 0.003 247.858);
+  --muted: oklch(0.279 0.041 260.031);
+  --muted-foreground: oklch(0.704 0.04 256.788);
+  --accent: oklch(0.279 0.041 260.031);
+  --accent-foreground: oklch(0.984 0.003 247.858);
+  --destructive: oklch(0.704 0.191 22.216);
+  --ring: oklch(0.551 0.027 264.364);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.208 0.042 265.755);
+  --sidebar-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-accent: oklch(0.279 0.041 260.031);
+  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.551 0.027 264.364);
+}
+
+/* 2. Map Variables to Tailwind Classes */
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+}
+
+/* 3. Base Styles */
 @layer base {
   html {
-    /* This tells the browser to make scrollbars dark automatically */
-    color-scheme: dark; 
+    /* Smooth transition when toggling themes */
+    transition: color 0.2s ease-out, background-color 0.2s ease-out;
   }
-
   body {
-    /* Apply the dark background and grey text globally */
-    @apply bg-bg-main text-text-body antialiased;
-  }
-
-  /* Make all headings white by default */
-  h1, h2, h3, h4, h5, h6 {
-    @apply text-text-head font-bold tracking-tight;
+    @apply bg-background text-foreground antialiased;
   }
 }
 
-/* 3. Reusable Components (Updated for Dark Mode) */
-@layer components {
-  /* Neon Primary Button */
-  .btn-primary {
-    @apply inline-flex items-center justify-center px-6 py-2.5 rounded-lg 
-           bg-primary text-white font-medium transition-all duration-200 
-           hover:bg-primary-hover hover:shadow-[0_0_15px_rgba(139,92,246,0.5)] 
-           active:scale-95;
-  }
+@theme inline {
 
-  /* Dark Card Style */
-  .card {
-    @apply bg-bg-card rounded-xl border border-zinc-800 p-6 shadow-xl;
-  }
+  --radius-sm: calc(var(--radius) - 4px);
 
-  /* Dark Input Field */
-  .input-field {
-    @apply w-full rounded-lg bg-bg-input border border-zinc-800 px-4 py-2.5 
-           text-white placeholder:text-zinc-500 
-           focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none;
+  --radius-md: calc(var(--radius) - 2px);
+
+  --radius-lg: var(--radius);
+
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+
+  --color-border: var(--border);
+
+  --color-input: var(--input);
+
+  --color-ring: var(--ring);
+
+  --color-chart-1: var(--chart-1);
+
+  --color-chart-2: var(--chart-2);
+
+  --color-chart-3: var(--chart-3);
+
+  --color-chart-4: var(--chart-4);
+
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+
+  --color-sidebar-foreground: var(--sidebar-foreground);
+
+  --color-sidebar-primary: var(--sidebar-primary);
+
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+
+  --color-sidebar-accent: var(--sidebar-accent);
+
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+
+  --color-sidebar-border: var(--sidebar-border);
+
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
