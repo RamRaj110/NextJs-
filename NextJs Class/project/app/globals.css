@@ -1,26 +1,59 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* 1. Define your Dark Theme Variables */
+@theme {
+  /* -- Backgrounds -- */
+  --color-bg-main: #09090b;   /* Very dark zinc */
+  --color-bg-card: #18181b;   /* Slightly lighter zinc for cards */
+  --color-bg-input: #27272a;  /* Input field background */
+
+  /* -- Text Colors -- */
+  --color-text-head: #f4f4f5; /* Almost white (for Headings) */
+  --color-text-body: #a1a1aa; /* Muted grey (for Paragraphs) */
+
+  /* -- Brand Colors (The Neon Pop) -- */
+  --color-primary: #8b5cf6;   /* Violet-500 */
+  --color-primary-hover: #7c3aed; 
+  --color-accent: #2dd4bf;    /* Teal-400 */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* 2. Apply Defaults to the Body */
+@layer base {
+  html {
+    /* This tells the browser to make scrollbars dark automatically */
+    color-scheme: dark; 
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    /* Apply the dark background and grey text globally */
+    @apply bg-bg-main text-text-body antialiased;
+  }
+
+  /* Make all headings white by default */
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-text-head font-bold tracking-tight;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* 3. Reusable Components (Updated for Dark Mode) */
+@layer components {
+  /* Neon Primary Button */
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-2.5 rounded-lg 
+           bg-primary text-white font-medium transition-all duration-200 
+           hover:bg-primary-hover hover:shadow-[0_0_15px_rgba(139,92,246,0.5)] 
+           active:scale-95;
+  }
+
+  /* Dark Card Style */
+  .card {
+    @apply bg-bg-card rounded-xl border border-zinc-800 p-6 shadow-xl;
+  }
+
+  /* Dark Input Field */
+  .input-field {
+    @apply w-full rounded-lg bg-bg-input border border-zinc-800 px-4 py-2.5 
+           text-white placeholder:text-zinc-500 
+           focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none;
+  }
 }
