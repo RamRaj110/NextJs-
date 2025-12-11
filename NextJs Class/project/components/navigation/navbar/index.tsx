@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Search, Menu,  } from 'lucide-react';
 import Theme from './Theme';
 import Link from 'next/link';
+import MobileNavigation from './MobileNavigation';
 
 function Navbar() {
   return (
@@ -38,12 +39,7 @@ function Navbar() {
             <div className="hover:bg-accent hover:text-accent-foreground p-2 rounded-full transition-colors">
                  <Theme />
             </div>
-
-            <button className="block md:hidden p-2 text-muted-foreground hover:text-foreground">
-                <Menu size={24} />
-            </button>
-            
-            <div className="hidden md:block h-8 w-8 rounded-full bg-linear-to-tr from-primary to-purple-500 cursor-pointer ring-2 ring-background"></div>
+            <MobileNavigation />
           </div>
 
         </div>
