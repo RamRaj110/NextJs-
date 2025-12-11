@@ -5,10 +5,8 @@ import Image from 'next/image'
 function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-background px-4 py-12">
-      {/* Main Card Container */}
       <div className="w-full max-w-md space-y-6 rounded-2xl border border-border bg-card p-8 shadow-xl">
         
-        {/* Header Section: Logo & Title */}
         <div className="flex flex-col items-center space-y-3 text-center">
           <Image
             className="rounded-full object-cover border border-border"
@@ -26,13 +24,9 @@ function AuthLayout({ children }: { children: React.ReactNode }) {
             </p>
           </div>
         </div>
-
-        {/* Main Form Content (Inputs passed as children) */}
         <div className="space-y-4">
           {children}
         </div>
-
-        {/* Social Authentication Section */}
         <SocialAuth />
         
       </div>

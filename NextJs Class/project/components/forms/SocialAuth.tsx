@@ -9,11 +9,11 @@ function SocialAuth() {
    try {
     await signIn(provider,{
       callbackUrl: ROUTES.HOME,
-      redirect:true
+      redirect: true,
     });
    } catch (error) {
       console.error(`Error signing in with ${provider}:`, error);
-      toast("Sign-in not implemented", {type:"error"});
+      toast("Sign-in not implemented",);
    }
   }
   return (
