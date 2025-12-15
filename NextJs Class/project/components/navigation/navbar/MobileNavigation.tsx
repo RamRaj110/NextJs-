@@ -11,6 +11,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import ROUTES from "@/constant/routes" 
+import NavLink from './NavLink'
 const MobileNavigation = () => {
   return (
     <Sheet>
@@ -25,7 +26,7 @@ const MobileNavigation = () => {
       <SheetContent side="left" className="w-[300px] border-r border-border bg-background/95 backdrop-blur-xl">
         
         {/* Header: Logo & Brand Name */}
-        <SheetHeader className="mb-8 text-left">
+        <SheetHeader className=" text-left">
           <SheetTitle asChild>
             <Link href="/" className="flex items-center gap-3">
               <Image 
@@ -41,6 +42,9 @@ const MobileNavigation = () => {
             </Link>
           </SheetTitle>
         </SheetHeader>
+        <div className="">
+             <NavLink isMobileNav/>
+        </div>
 
         {/* Authentication Buttons */}
         <div className="flex flex-col gap-4 p-1 ">
