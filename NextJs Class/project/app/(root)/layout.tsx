@@ -1,5 +1,6 @@
 import LeftSideBar from '@/components/navigation/LeftSideBar'
 import Navbar from '@/components/navigation/navbar'
+import RightSideBar from '@/components/navigation/RightSideBar'
 import React from 'react'
 
 
