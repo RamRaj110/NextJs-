@@ -1,8 +1,9 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Input } from '../ui/input'
 import { Search } from 'lucide-react'
 import { useSearchParams } from 'next/navigation';
+import { formUrlQuery } from '@/lib/url';
 
 interface Props{
     route?:string;
@@ -16,11 +17,21 @@ function LocalSearch({route,placeholder,otherClasses}:Props) {
 
   const [query,setQuery] = useState(searchQuery);
 
+  useEffect(()=>{
+    if(query){
+      const newUrl =formUrlQuery({
+        params: searchParam.toString(),
+        key:'search',
+        value:query
+      })
+    }
+  },[query])
+
+
   return (
     <div className="relative ">
          <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                <Search className={`h-5 w-5 text-muted-foreground ${otherClasses}`} />
-                
+                <Search className={`h-5 w-5 text-muted-foreground ${otherClasses}`} />             
                 </div>
                 <div>
               <Input
