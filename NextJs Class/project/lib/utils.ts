@@ -1,6 +1,5 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { ja } from "zod/locales";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -11,6 +10,7 @@ export const getIconClassName = (iconName: string) => {
 
   const techMap:{[key:string]:string}= {
     javascript: "devicon-javascript-plain",
+    nextjs: "devicon-nextjs-original",
     react: "devicon-react-original",
     css: "devicon-css3-plain",
     html: "devicon-html5-plain",
@@ -22,6 +22,7 @@ export const getIconClassName = (iconName: string) => {
     go: "devicon-go-plain",
     rust: "devicon-rust-plain",
     typescript: "devicon-typescript-plain",
+   
   }
   return techMap[normalizedIconName] ? `${techMap[normalizedIconName]} colored` : "devicon-code-plain";
 }

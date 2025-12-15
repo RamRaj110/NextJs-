@@ -8,7 +8,7 @@ const Home = async() => {
 
   return (
     <>
-    <section>
+    <section className="flex items-center justify-between mb-6 ">
       <h1>All Question</h1>
       <Button >
       <Link href={ROUTES.ASK_QUESTIONS}>
@@ -17,20 +17,9 @@ const Home = async() => {
       </Button>
     </section>
     <section>
-      <LocalSearch/>
+      <LocalSearch placeholder='Search questions...' otherClasses='flex-1mki' />
     </section>
     Home filter 
-    <div>
-      <h1>I am Home</h1>
-      <form action={
-        async ()=>{
-          "use server"
-          await signOut({redirectTo: ROUTES.SIGNIN})
-        }
-      }>
-        <Button type="submit">Sign Out</Button>
-      </form>
-    </div>
         </>
   )
 }

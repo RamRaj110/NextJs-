@@ -22,9 +22,7 @@ const popularTags = [
 
 const RightSideBar = () => {
   return (
-    <section className="hidden xl:flex h-screen w-[330px] flex-col overflow-y-auto border-l border-border bg-background p-6 pt-24 sticky right-0 top-0 shadow-light-300 dark:shadow-none custom-scrollbar">
-        
-        {/* --- Top Questions Section --- */}
+    <section className="hidden xl:flex h-screen w-[330px] flex-col  border-l border-border bg-background p-6 sticky right-0 top-0 shadow-light-300 dark:shadow-none custom-scrollbar">
         <div className="flex flex-col gap-6">
             <h3 className="h3-bold text-foreground font-bold text-lg">Top Questions</h3>
             
