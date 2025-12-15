@@ -10,7 +10,7 @@ const Home = async() => {
 
   return (
     <div>
-      <h1>helooos</h1>
+      <h1>I am Home</h1>
       <form action={
         async ()=>{
           "use server"

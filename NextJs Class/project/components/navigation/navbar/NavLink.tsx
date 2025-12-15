@@ -1,10 +1,9 @@
 "use client";
 
-import { sidebarLinks } from "@/constant"; // Assuming this is where your array is
+import { sidebarLinks } from "@/constant"; 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { cn } from "@/lib/utils"; // If you don't have this helper, just use template literals
 import { SheetClose } from "@/components/ui/sheet";
 
 function NavLink({ isMobileNav = false }: { isMobileNav?: boolean }) {
@@ -14,7 +13,6 @@ function NavLink({ isMobileNav = false }: { isMobileNav?: boolean }) {
   return (
     <div className="flex flex-col gap-2 w-full">
       {sidebarLinks.map((item) => {
-        // specific logic to match exact route or sub-routes
         const isActive =
           (pathname.includes(item.route) && item.route.length > 1) ||
           pathname === item.route;
@@ -29,7 +27,11 @@ function NavLink({ isMobileNav = false }: { isMobileNav?: boolean }) {
             href={item.route}
             key={item.label}
             className={`
-              group flex items-center justify-start gap-4 rounded-lg p-3 transition-all duration-200
+              group flex items-center gap-4 rounded-lg p-3 transition-all duration-200
+              ${
+                // If NOT mobile nav: Center icon on Tablet (md), Left align on Desktop (lg)
+                !isMobileNav ? "justify-start md:justify-center lg:justify-start" : "justify-start"
+              }
               ${
                 isActive
                   ? "bg-primary text-primary-foreground shadow-sm font-bold" // Active State
@@ -37,17 +39,17 @@ function NavLink({ isMobileNav = false }: { isMobileNav?: boolean }) {
               }
             `}
           >
-            {/* Icon Wrapper */}
             <span className={`${isActive ? "text-primary-foreground" : "text-muted-foreground group-hover:text-primary transition-colors"}`}>
-              {/* Since your icons are already components <House />, we clone them to enforce size if needed, 
-                  otherwise standard text sizing applies via currentColor */}
               {React.cloneElement(item.icon as React.ReactElement, { 
                   size: 20 
               })}
             </span>
 
-            {/* Label */}
-            <p className={`${isMobileNav ? "text-base" : "text-sm"} leading-none`}>
+            {/* Label - Hidden on Tablet (max-lg) unless it's the Mobile Nav */}
+            <p className={`
+                ${isMobileNav ? "text-base" : "text-sm max-lg:hidden"} 
+                leading-none
+            `}>
               {item.label}
             </p>
           </Link>
