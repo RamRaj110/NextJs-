@@ -1,25 +1,35 @@
-import { signOut } from '@/auth';
-import { auth } from '@/auth';
-import { Button } from '@/components/ui/button';
-import ROUTES from '@/constant/routes';
-import React from 'react'
+import LocalSearch from "@/components/search/LocalSearch"
+import { Button } from "@/components/ui/button"
+import ROUTES from "@/constant/routes"
+import Link from "next/link"
+
 
 const Home = async() => {
-  const session = await auth();
-  console.log(session)
 
   return (
+    <>
+    <section>
+      <h1>All Question</h1>
+      <Button >
+      <Link href={ROUTES.ASK_QUESTIONS}>
+      Ask a Question
+      </Link>
+      </Button>
+    </section>
+    <section>
+      <LocalSearch/>
+    </section>
+    Home filter 
     <div>
-      <h1>helooos</h1>
-      <form action={
-        async ()=>{
-          "use server"
-          await signOut({redirectTo: ROUTES.SIGNIN})
-        }
-      }>
-        <Button type="submit">Sign Out</Button>
-      </form>
+      <p>
+        Question List
+      </p>
+      <p> questio 1</p>
+      <p> questio 1</p>
+      <p> questio 1</p>
+      <p> questio 1</p>
     </div>
+        </>
   )
 }
 
