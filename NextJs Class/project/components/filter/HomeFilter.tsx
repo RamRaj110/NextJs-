@@ -6,6 +6,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 
 const HomePageFilters = [
+  {name:"react",value:"react"},
+  {name:"javascript",value:"javascript"},
+  {name:"node",value:"node"},
   { name: "Newest", value: "newest" },
   { name: "Recommended", value: "recommended" },
   { name: "Frequent", value: "frequent" },

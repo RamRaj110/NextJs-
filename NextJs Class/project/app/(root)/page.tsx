@@ -1,3 +1,4 @@
+import QuestionCard from "@/components/cards/QuestionCard"
 import HomeFilter from "@/components/filter/HomeFilter"
 import LocalSearch from "@/components/search/LocalSearch"
 import { Button } from "@/components/ui/button"
@@ -27,6 +28,32 @@ const questions = [
     upvotes: 10,
     answers: 5,
     views: 200,
+    image:'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.tvaMwK3QuFxhTYg4PSNNVAHaHa%3Fcb%3Ducfimg2%26pid%3DApi%26ucfimg%3D1&f=1&ipt=7b8313f1cb91f9661c0fab1d3ff1d9384ebfe8b337b65d3309c089007f9e18f7&ipo=images',
+    createdAt: '2023-10-02T10:00:00Z'
+  }, {
+    id: 3,
+    title: 'How to learn React?',
+    content: 'I am new to web development...',
+    description: 'Looking for resources and tips to get started with JS.',
+    tags: [{ id: 3, name: 'React' }, { id: 2, name: 'Web Development' }],
+    author: { id: 1, name: 'John Doe' },
+    upvotes: 10,
+    answers: 5,
+    views: 200,
+    image:'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.tvaMwK3QuFxhTYg4PSNNVAHaHa%3Fcb%3Ducfimg2%26pid%3DApi%26ucfimg%3D1&f=1&ipt=7b8313f1cb91f9661c0fab1d3ff1d9384ebfe8b337b65d3309c089007f9e18f7&ipo=images',
+    createdAt: '2023-10-02T10:00:00Z'
+  },
+   {
+    id: 4,
+    title: 'How to learn node?',
+    content: 'I am new to web development...',
+    description: 'Looking for resources and tips to get started with JS.',
+    tags: [{ id: 3, name: 'Node' }, { id: 2, name: 'Web Development' }],
+    author: { id: 1, name: 'John Doe' },
+    upvotes: 10,
+    answers: 5,
+    views: 200,
+    image:'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.tvaMwK3QuFxhTYg4PSNNVAHaHa%3Fcb%3Ducfimg2%26pid%3DApi%26ucfimg%3D1&f=1&ipt=7b8313f1cb91f9661c0fab1d3ff1d9384ebfe8b337b65d3309c089007f9e18f7&ipo=images',
     createdAt: '2023-10-02T10:00:00Z'
   }
 ]
@@ -34,18 +61,19 @@ const questions = [
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
 }
-
 const Home = async ({ searchParams }: SearchParams) => {
-  const { search = '' } = await searchParams;
+  const { search = '', filter = '' } = await searchParams;
 
-  // Filter questions based on search query
-  const filteredQuestions = questions.filter((question) =>
-    question.title.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredQuestions = questions.filter((question) => {
+    const matchesSearch = question.title.toLowerCase().includes(search.toLowerCase());
 
+    const matchesFilter = filter 
+      ? question.tags[0].name.toLowerCase() === filter.toLowerCase() 
+      : true; 
+    return matchesSearch && matchesFilter;
+  });
   return (
     <>
-      {/* HEADER SECTION */}
       <section className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
         <h1 className="h1-bold text-3xl font-bold">All Questions</h1>
         
@@ -56,7 +84,6 @@ const Home = async ({ searchParams }: SearchParams) => {
         </Link>
       </section>
 
-      {/* SEARCH SECTION */}
       <section className="mt-11">
         <LocalSearch 
             route="/"
@@ -66,52 +93,10 @@ const Home = async ({ searchParams }: SearchParams) => {
       </section>
 
    <HomeFilter />
-
-      {/* QUESTION LIST (Inlined styles - no QuestionCard) */}
       <div className="mt-10 flex w-full flex-col gap-6">
         {filteredQuestions.length > 0 ? (
             filteredQuestions.map((question) => (
-              <div key={question.id} className="card-wrapper rounded-[10px] p-9 sm:px-11 bg-card border border-border shadow-sm">
-                
-                {/* Title & Date */}
-                <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
-                    <div>
-                        <span className="text-muted-foreground text-xs line-clamp-1 flex sm:hidden">
-                            {new Date(question.createdAt).toLocaleDateString()}
-                        </span>
-                        <Link href={ROUTES.PROFILE(question.id)}>
-                            <h3 className="sm:h3-semibold base-semibold text-foreground hover:text-primary transition-colors text-xl font-bold line-clamp-1 flex-1">
-                                {question.title}
-                            </h3>
-                        </Link>
-                    </div>
-                </div>
-
-                <p className="mt-3.5 text-muted-foreground text-sm line-clamp-2">{question.description}</p>
-
-                {/* Tags */}
-                <div className="mt-3.5 flex flex-wrap gap-2">
-                  {question.tags.map((tag) => (
-                    <span key={tag.id} className="subtle-medium bg-secondary text-secondary-foreground rounded-md px-4 py-2 text-xs uppercase font-medium">
-                        {tag.name}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Footer: Author & Metrics */}
-                <div className="flex justify-between items-center mt-6 w-full flex-wrap gap-3 text-xs text-muted-foreground font-medium">
-                  <div className="flex items-center gap-1">
-                      <span>{question.author.name}</span>
-                      <span className="hidden sm:inline"> • asked {new Date(question.createdAt).toLocaleDateString()}</span>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                      <span>{question.upvotes} Votes</span>
-                      <span>{question.answers} Answers</span>
-                      <span>{question.views} Views</span>
-                  </div>
-                </div>
-              </div>
+              <QuestionCard key={question.id} question={question} />
             ))
         ) : (
              <div className="mt-10 flex w-full items-center justify-center">
