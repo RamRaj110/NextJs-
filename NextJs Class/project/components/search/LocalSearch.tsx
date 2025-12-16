@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react'
 import { Input } from '../ui/input'
 import { Search } from 'lucide-react'
-import { useSearchParams } from 'next/navigation';
-import { formUrlQuery } from '@/lib/url';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { formUrlQuery, removeKeyformUrlQuery } from '@/lib/url';
 
 interface Props{
     route?:string;
@@ -12,20 +12,35 @@ interface Props{
 }
 
 function LocalSearch({route,placeholder,otherClasses}:Props) {
+  const router = useRouter()
+  const pathname = usePathname()
   const searchParam = useSearchParams()
   const searchQuery = searchParam.get('search') || '';
 
   const [query,setQuery] = useState(searchQuery);
 
   useEffect(()=>{
-    if(query){
+    const delayDebounce = setTimeout(()=>{
+          if(query){
       const newUrl =formUrlQuery({
         params: searchParam.toString(),
         key:'search',
         value:query
       })
-    }
-  },[query])
+      router.push(newUrl,{scroll:false})
+    }else{
+if(pathname === route){
+        const newUrl = removeKeyformUrlQuery({
+          params: searchParam.toString(),
+         keyToRemove:['search']
+        })
+        router.push(newUrl,{scroll:false});
+}       
+}
+    },500);
+
+    return ()=> clearTimeout(delayDebounce);
+  },[query,router,searchParam,route,pathname])
 
 
   return (

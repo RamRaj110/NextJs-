@@ -1,0 +1,58 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { formUrlQuery, removeKeyformUrlQuery } from "@/lib/url"; 
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useState } from "react";
+
+const HomePageFilters = [
+  { name: "Newest", value: "newest" },
+  { name: "Recommended", value: "recommended" },
+  { name: "Frequent", value: "frequent" },
+  { name: "Unanswered", value: "unanswered" },
+];
+
+function HomeFilters() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [active, setActive] = useState(searchParams.get("filter") || "");
+
+  const handleTypeClick = (item: string) => {
+    if (active === item) {
+      setActive("");
+      const newUrl = removeKeyformUrlQuery({
+        params: searchParams.toString(),
+        keyToRemove: ["filter"],
+      });
+      router.push(newUrl, { scroll: false });
+    } else {
+      setActive(item);
+      const newUrl = formUrlQuery({
+        params: searchParams.toString(),
+        key: "filter",
+        value: item.toLowerCase(),
+      });
+      router.push(newUrl, { scroll: false });
+    }
+  };
+
+  return (
+    <div className="mt-10 hidden flex-wrap gap-3 md:flex">
+      {HomePageFilters.map((item) => (
+        <Button
+          key={item.value}
+          onClick={() => handleTypeClick(item.value)}
+          className={`body-medium rounded-lg px-6 py-3 capitalize shadow-none ${
+            active === item.value
+              ? "bg-primary text-primary-foreground hover:bg-primary/90"
+              : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+          }`}
+        >
+          {item.name}
+        </Button>
+      ))}
+    </div>
+  );
+}
+
+export default HomeFilters;
