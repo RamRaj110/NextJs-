@@ -24,6 +24,7 @@ import {
   InsertCodeBlock,
   ListsToggle
 } from "@mdxeditor/editor";
+import "./darkEditor.css";
 import "@mdxeditor/editor/style.css";
 import { useTheme } from "next-themes";
 import React from "react";
@@ -50,12 +51,9 @@ const Editor = ({ value, fieldChange, editorRef }: EditorProps) => {
       onChange={fieldChange}
       // 3. Add 'prose' classes for Typography support
       // 'prose-headings:text-foreground' ensures headings aren't gray in dark mode
+    //  className={`markdown-editor grid w-full gap-5 ${resolvedTheme === 'dark' ? 'dark-theme' : ''}`}
      className={`markdown-editor grid w-full gap-5 ${resolvedTheme === 'dark' ? 'dark-theme' : ''}`}
-      contentEditableClassName={`
-        prose dark:prose-invert 
-        prose-headings:font-bold prose-h1:text-2xl prose-h2:text-xl prose-p:leading-relaxed
-        max-w-none min-h-[300px] text-foreground
-      `}
+      contentEditableClassName="prose dark:prose-invert max-w-none min-h-[300px]"
       plugins={[
         headingsPlugin(),
         listsPlugin(),

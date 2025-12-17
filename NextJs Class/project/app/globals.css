@@ -4,6 +4,8 @@
 
 @custom-variant dark (&:is(.dark *));
 
+
+
 /* 1. Define the Theme Variables */
 /* These are the actual values that switch */
 @layer base {
@@ -201,5 +203,93 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+
+@layer utilities {
+  /* --- 1. TOOLBAR & BUTTONS --- */
+  .mdxeditor-toolbar {
+    @apply !bg-background !border-b !border-border !p-2 !flex !gap-1 !items-center !flex-wrap;
+  }
+
+  .mdxeditor-toolbar button {
+    @apply !text-muted-foreground !rounded-md !p-1.5 !transition-colors;
+  }
+  .mdxeditor-toolbar button:hover {
+     @apply !bg-secondary !text-foreground;
+  }
+  .mdxeditor-toolbar button[data-state="on"] {
+     @apply !bg-primary/10 !text-primary;
+  }
+
+  /* --- 2. DROPDOWNS (Block Type, Code Language) --- */
+  .mdxeditor-select-trigger {
+    @apply !flex !items-center !justify-between !gap-2 !rounded-md !px-3 !py-1.5 !text-sm !font-medium !min-w-[120px] !text-muted-foreground;
+  }
+  .mdxeditor-select-trigger:hover {
+    @apply !bg-secondary/50 !text-foreground;
+  }
+
+  .mdxeditor-select-content {
+    /* Fixed: Removed restrictive heights/widths that caused layout break */
+    @apply !bg-popover !border !border-border !rounded-md !shadow-md !p-1 !mt-1 !z-50;
+  }
+
+  .mdxeditor-select-item {
+    @apply !px-3 !py-2 !text-sm !text-popover-foreground !cursor-pointer !rounded-sm;
+  }
+  .mdxeditor-select-item:hover {
+    @apply !bg-accent !text-accent-foreground;
+  }
+
+  /* --- 3. POPUPS / DIALOGS (The Link/URL Box) --- */
+  /* This fixes the "overlap" issue */
+  .mdxeditor-popup-container {
+    @apply !bg-popover !text-popover-foreground !border !border-border !shadow-xl !rounded-lg !p-4 !z-50;
+    width: 350px; /* Fixed width prevents it from stretching to full page */
+    max-width: 90vw;
+  }
+
+  .mdxeditor-popup-container form {
+    @apply !flex !flex-col !gap-2; 
+  }
+
+  .mdxeditor-popup-container input {
+    @apply !bg-background !border !border-input !text-foreground !rounded-md !px-3 !py-2 !text-sm;
+  }
+  
+  .mdxeditor-popup-container button[type="submit"] {
+     @apply !bg-primary !text-primary-foreground !rounded-md !px-4 !py-2 !text-sm !font-medium !mt-2;
+  }
+  .mdxeditor-popup-container button[type="button"] {
+     @apply !hidden; /* Often the close button is redundant or breaks layout, hiding it is safer */
+  }
+
+  /* --- 4. CODE BLOCK VISIBILITY FIX (CRITICAL) --- */
+  /* This ensures the 'prose' class doesn't mess up the CodeMirror text colors */
+  
+  .cm-editor {
+    @apply !bg-secondary/50 !rounded-md !overflow-hidden !my-4;
+  }
+
+  /* Force the text color inside code blocks to be visible */
+  .cm-scroller {
+    @apply !font-mono !text-sm;
+  }
+  
+  /* In Dark Mode, ensure code text is light */
+  .dark-theme .cm-content {
+    @apply !text-gray-100;
+  }
+  
+  /* In Light Mode, ensure code text is dark */
+  .mdxeditor-root:not(.dark-theme) .cm-content {
+     @apply !text-gray-900;
+  }
+  
+  /* Remove the weird prose padding from pre tags inside the editor */
+  .prose pre {
+    @apply !p-0 !bg-transparent !m-0 !rounded-none;
   }
 }

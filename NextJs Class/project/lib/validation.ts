@@ -1,4 +1,4 @@
-import { title } from "process";
+
 import { z } from "zod";
 
 export const SignInSchema = z.object({
@@ -67,13 +67,20 @@ export const SignUpSchema = z
 
 export const AskQuestionSchema = z.object({
   title: z
-    .array(z.string().min(5, { message: "Title is required" }))
-    .max(100, { message: "Title must be at most 100 characters long" }),
-  content: z.string().min(1, { message: "Body is required" }),
+    .string()
+    .min(1, { message: 'Title is required' })
+    .min(5, { message: 'Title must be at least 5 characters' })
+    .max(130, { message: 'Title must be less than 130 characters' }),
+  
+  content: z
+    .string()
+    .min(1, { message: 'Content is required' })
+    .min(20, { message: 'Content must be at least 20 characters' }),
+  
   tags: z
-    .array(z.string().min(1, { message: "Tag is required." })
-    .max(30, { message: "Tag cannot exceed 30 characters." })
-).min(1, { message: "At least one tag is required" })
-  .max(3, { message: "At most 3 tags are allowed" }),
-
+    .array(z.string())
+    .min(1, { message: 'At least one tag is required' })
+    .max(3, { message: 'Maximum 3 tags allowed' }),
 });
+
+export type AskQuestionSchemaType = z.infer<typeof AskQuestionSchema>;

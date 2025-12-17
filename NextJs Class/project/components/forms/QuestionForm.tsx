@@ -2,13 +2,12 @@
 import '@mdxeditor/editor/style.css'
 
 import dynamic from "next/dynamic";
-import React, { KeyboardEvent, useState } from 'react';
+import React, { KeyboardEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod'; 
 import { Button } from '@/components/ui/button'; 
 import { Input } from '@/components/ui/input'; 
-import { Badge } from '@/components/ui/badge'; 
 import { X } from 'lucide-react';
 import {
   Form,
@@ -20,8 +19,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { AskQuestionSchema } from '@/lib/validation'; 
+import TagCard from '../cards/TagCard';
 
-
+const Editor = dynamic(
+  () => import("@/components/editor/MDXeditor"),
+  { ssr: false }
+);
+2jjABKnshpglPOPr
 const QuestionForm = () => {
   const form = useForm<z.infer<typeof AskQuestionSchema>>({
     resolver: zodResolver(AskQuestionSchema),
@@ -35,21 +39,18 @@ const QuestionForm = () => {
   const { isSubmitting } = form.formState;
 
   const handleCreateQuestion = async (values: z.infer<typeof AskQuestionSchema>) => {
-    // TODO: Call your Server Action or API here
     console.log("Form Data:", values);
-    
-    // Example: await createQuestion(values);
+    form.reset();
+    // Add your API call here
   };
 
-  // --- Tag Handling Logic ---
   const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>, field: any) => {
     if (e.key === 'Enter' && field.name === 'tags') {
       e.preventDefault();
 
       const tagInput = e.currentTarget;
       const tagValue = tagInput.value.trim();
-
-      // Basic Validation: Ensure tag isn't empty and not overly long
+      
       if (tagValue !== '') {
         if (tagValue.length > 15) {
           return form.setError('tags', {
@@ -58,18 +59,21 @@ const QuestionForm = () => {
           });
         }
 
-        // Check if tag already exists in the current form values
         if (!field.value.includes(tagValue as never)) {
-          // Limit to 3 tags (optional constraint)
-        //   if (field.value.length >= 3) {
-        //       return form.setError('tags', { type: 'required', message: 'Max 3 tags allowed' })
-        //   }
-          
+          if (field.value.length >= 3) {
+            return form.setError('tags', { 
+              type: 'required', 
+              message: 'Max 3 tags allowed' 
+            });
+          }
           form.setValue('tags', [...field.value, tagValue]);
           tagInput.value = '';
           form.clearErrors('tags');
         } else {
-             form.trigger('tags'); // Trigger validation if duplicate
+          form.setError('tags', {
+            type: 'required',
+            message: 'Tag already exists.',
+          });
         }
       }
     }
@@ -80,22 +84,13 @@ const QuestionForm = () => {
     form.setValue('tags', newTags);
   };
 
-  const Editor = dynamic(
-  () => import("@/components/editor/MDXeditor"),
-  { ssr: false }
-);
-
-
-  const [content, setContent] = useState("# Hello MDX");
-
   return (
-
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleCreateQuestion)}
         className="flex w-full flex-col gap-10"
       >
-        {/* --- Title Field --- */}
+        {/* Title Field */}
         <FormField
           control={form.control}
           name="title"
@@ -119,7 +114,7 @@ const QuestionForm = () => {
           )}
         />
 
-        {/* --- Content / Description Field --- */}
+        {/* Content Field */}
         <FormField
           control={form.control}
           name="content"
@@ -129,7 +124,7 @@ const QuestionForm = () => {
                 Detailed Explanation of your problem <span className="text-primary">*</span>
               </FormLabel>
               <FormControl>
-              <Editor
+                <Editor
                   value={field.value}
                   fieldChange={field.onChange}
                 />
@@ -142,7 +137,7 @@ const QuestionForm = () => {
           )}
         />
 
-        {/* --- Tags Field --- */}
+        {/* Tags Field */}
         <FormField
           control={form.control}
           name="tags"
@@ -159,18 +154,25 @@ const QuestionForm = () => {
                     onKeyDown={(e) => handleInputKeyDown(e, field)}
                   />
 
-                  {/* Render Tags as Badges */}
                   {field.value.length > 0 && (
                     <div className="flex justify-start mt-2.5 gap-2.5 flex-wrap">
                       {field.value.map((tag: string) => (
-                        <Badge 
-                            key={tag} 
-                            className="subtle-medium bg-secondary text-secondary-foreground flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 capitalize"
-                            onClick={() => handleTagRemove(tag, field)}
+                        <TagCard 
+                          key={tag} 
+                          id={0} 
+                          name={tag} 
+                          compact 
+                          showCount={false} 
                         >
-                          {tag}
-                          <X size={12} className="cursor-pointer object-contain invert-0 dark:invert" />
-                        </Badge>
+                          <button 
+                            type="button" 
+                            onClick={() => handleTagRemove(tag, field)} 
+                            className="ml-2 focus:outline-none hover:text-destructive transition-colors"
+                            aria-label={`Remove ${tag} tag`}
+                          >
+                            <X size={12} />
+                          </button>
+                        </TagCard>
                       ))}
                     </div>
                   )}
@@ -183,16 +185,13 @@ const QuestionForm = () => {
             </FormItem>
           )}
         />
+
         <Button 
-            type="submit" 
-            className="primary-gradient w-fit text-light-900 font-bold"
-            disabled={isSubmitting}
+          type="submit" 
+          className="primary-gradient w-fit text-light-900 font-bold"
+          disabled={isSubmitting}
         >
-          {isSubmitting ? (
-            <>Posting...</>
-          ) : (
-            <>Ask a Question</>
-          )}
+          {isSubmitting ? 'Posting...' : 'Ask a Question'}
         </Button>
       </form>
     </Form>
