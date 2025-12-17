@@ -16,7 +16,7 @@ const popularTags = [
     { id: 1, name: "JavaScript", questions: 1500 },
     { id: 2, name: "React", questions: 1200 },
     { id: 3, name: "CSS", questions: 900 },
-    { id: 4, name: "Next.js", questions: 500 },
+    { id: 4, name: "NextJs", questions: 500 },
     { id: 5, name: "TypeScript", questions: 400 },
 ];
 

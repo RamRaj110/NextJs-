@@ -12,9 +12,7 @@ export const getIconClassName = (iconName: string) => {
   const normalizedIconName = iconName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
 
   const techMap: { [key: string]: string } = {
-    // --- Languages ---
-    nextjs: "devicon-nextjs-original",
-    next: "devicon-nextjs-original",
+    
     javascript: "devicon-javascript-plain",
     js: "devicon-javascript-plain",
     typescript: "devicon-typescript-plain",
@@ -52,7 +50,7 @@ export const getIconClassName = (iconName: string) => {
     less: "devicon-less-plain-wordmark",
     react: "devicon-react-original",
     reactjs: "devicon-react-original",
-    nextjs: "devicon-nextjs-original", // or devicon-nextjs-line
+    nextjs: "devicon-nextjs-plain",  
     next: "devicon-nextjs-original",
     vue: "devicon-vuejs-plain",
     vuejs: "devicon-vuejs-plain",

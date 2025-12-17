@@ -1,20 +1,17 @@
+import { title } from "process";
 import { z } from "zod";
-
 
 export const SignInSchema = z.object({
   email: z
     .string()
     .min(1, { message: "Email is required" })
-    .email({ message: "Invalid email address" }), 
+    .email({ message: "Invalid email address" }),
 
   password: z
     .string()
     .min(6, { message: "Password must be at least 6 characters long" })
-    .max(20, { message: "Password must be at most 20 characters long" }), 
-
+    .max(20, { message: "Password must be at most 20 characters long" }),
 });
-
-
 
 export const SignUpSchema = z
   .object({
@@ -62,9 +59,21 @@ export const SignUpSchema = z
         message: "Phone must be 10 digits",
       })
       .optional(),
-
-    })
+  })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+export const AskQuestionSchema = z.object({
+  title: z
+    .array(z.string().min(5, { message: "Title is required" }))
+    .max(100, { message: "Title must be at most 100 characters long" }),
+  content: z.string().min(1, { message: "Body is required" }),
+  tags: z
+    .array(z.string().min(1, { message: "Tag is required." })
+    .max(30, { message: "Tag cannot exceed 30 characters." })
+).min(1, { message: "At least one tag is required" })
+  .max(3, { message: "At most 3 tags are allowed" }),
+
+});
