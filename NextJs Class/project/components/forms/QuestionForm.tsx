@@ -25,7 +25,6 @@ const Editor = dynamic(
   () => import("@/components/editor/MDXeditor"),
   { ssr: false }
 );
-2jjABKnshpglPOPr
 const QuestionForm = () => {
   const form = useForm<z.infer<typeof AskQuestionSchema>>({
     resolver: zodResolver(AskQuestionSchema),
