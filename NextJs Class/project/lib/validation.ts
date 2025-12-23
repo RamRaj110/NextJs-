@@ -1,5 +1,6 @@
 
-import { email, z } from "zod";
+import { Types } from "mongoose";
+import {  z } from "zod";
 
 export const SignInSchema = z.object({
   email: z
@@ -112,3 +113,33 @@ export const UserSchema = z.object({
     .url({ message: "Portfolio must be a valid URL" }).optional(),
     reputation: z.number().optional(),
 });
+
+export const AccountValidationSchema = z.object({
+  userId: z
+    .custom<Types.ObjectId>((val) => Types.ObjectId.isValid(val))
+    .refine((val) => !!val, { message: "Invalid ObjectId" })
+    .describe("Reference to the owning User document"),
+  name: z.string().min(1, { message: "Name is required" }),
+  image: z.string().url().optional().or(z.literal("")),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters long" })
+      .max(20, { message: "Password must be at most 20 characters long" })
+      .regex(/[A-Z]/, {
+        message: "Password must contain at least one uppercase letter",
+      })
+      .regex(/[a-z]/, {
+        message: "Password must contain at least one lowercase letter",
+      })
+      .regex(/[0-9]/, {
+        message: "Password must contain at least one number",
+      })
+      .regex(/[`!@#$%^&*()_\-+=[\]{};':"\\|,.<>/?~ ]/, {
+        message: "Password must contain at least one special character",
+      }), // [web:5][web:14]
+
+  provider: z.string().min(1, { message: "Provider is required" }),
+  providerAccountId: z.string().min(1, { message: "Provider account ID is required" })
+});
+
+export type AccountDTO = z.infer<typeof AccountValidationSchema>;

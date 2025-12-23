@@ -26,7 +26,14 @@ export async function POST(request:Request){
         }
         const {email,username} = validatedData.data;
         const existingUser = await User.findOne({$or:[{email},{username}]});
+        if(existingUser){
+            throw new ValidationError({email:["Email or Username already exists"]});
+        }
+        const newUser = new User(validatedData.data);
+        await newUser.save();
+        return NextResponse.json({success:true,data:newUser},{status:201});
     } catch (error) {
+        return handleError(error,"api") as APIErrorResponse 
         
     }
 }
