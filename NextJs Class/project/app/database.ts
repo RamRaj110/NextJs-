@@ -28,7 +28,20 @@ const tickets = [
         name:'Redesign user profile page',
         status: 'in-progress',
         type: 'feature',
+    },
+    {
+        id: 6,
+        name:'Fix login redirect issue',
+        status: 'closed',
+        type: 'bug',
+    },
+    {
+        id: 7,
+        name:'Add multi-language support',
+        status: 'open',
+        type: 'feature',
     }
+
 
 ];
 
