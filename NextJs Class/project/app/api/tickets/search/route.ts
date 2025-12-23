@@ -13,6 +13,6 @@ export async function GET(request: NextRequest) {
         ticket.status.toLowerCase().includes(query) ||
         ticket.type.toLowerCase().includes(query)
     );
-
+    
     return NextResponse.json(filteredTickets);
 }

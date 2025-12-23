@@ -1,5 +1,5 @@
 
-import { z } from "zod";
+import { email, z } from "zod";
 
 export const SignInSchema = z.object({
   email: z
@@ -13,8 +13,7 @@ export const SignInSchema = z.object({
     .max(20, { message: "Password must be at most 20 characters long" }),
 });
 
-export const SignUpSchema = z
-  .object({
+export const SignUpSchema = z.object({
     name: z
       .string()
       .min(1, { message: "Name is required" })
@@ -84,3 +83,32 @@ export const AskQuestionSchema = z.object({
 });
 
 export type AskQuestionSchemaType = z.infer<typeof AskQuestionSchema>;
+
+export const UserSchema = z.object({
+  name: z
+    .string()
+    .min(1, { message: "Name is required" })
+    .max(50, { message: "Name must be at most 50 characters long" }),
+  
+  username: z.string()
+    .min(3, { message: "Username must be at least 3 characters long" })
+    .max(20, { message: "Username must be at most 20 characters long" })
+    .regex(/^[a-zA-Z0-9_]+$/, {
+      message: "Username can only contain letters, numbers and underscores",
+    }),
+    email: z.string()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Invalid email address" }),
+  
+  bio: z
+    .string().optional(),
+  image: z
+    .string()
+    .url({ message: "Image must be a valid URL" }).optional(),
+  location: z
+    .string().optional(),
+  portfolio: z
+    .string()
+    .url({ message: "Portfolio must be a valid URL" }).optional(),
+    reputation: z.number().optional(),
+});

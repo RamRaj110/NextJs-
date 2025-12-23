@@ -1,3 +1,6 @@
+import { NextResponse } from "next/server";
+import { Action } from "sonner";
+
 interface Author{
     id: number;
     name: string;
@@ -21,3 +24,12 @@ interface Question{
     views: number;
     createdAt: string;
 }
+
+type SuccessResponse<T = null> = ActionResponse<T> & {
+    success: true;
+}
+type ErrorResponse = ActionResponse<undefined> & { success: false; 
+}
+
+type APIErrorResponse = NextResponse<ErrorResponse>
+type APIResponse<T = null> = NextResponse<SuccessResponse<T> | ErrorResponse>
