@@ -25,6 +25,12 @@ interface Question{
     createdAt: string;
 }
 
+interface ActionResponse<T = null> {
+    success: boolean;
+    data?: T;
+    message?: string;
+}
+
 type SuccessResponse<T = null> = ActionResponse<T> & {
     success: true;
 }
