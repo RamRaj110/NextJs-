@@ -23,8 +23,8 @@ export const SignUpSchema = z.object({
       .string()
       .min(3, { message: "Username must be at least 3 characters long" })
       .max(20, { message: "Username must be at most 20 characters long" })
-      .regex(/^[a-zA-Z0-9_]+$/, {
-        message: "Username can only contain letters, numbers and underscores",
+      .regex(/^[a-zA-Z0-9_-]+$/, {
+        message: "Username can only contain letters, numbers, underscores and hyphens",
       }),
 
     email: z
@@ -93,8 +93,8 @@ export const UserSchema = z.object({
   username: z.string()
     .min(3, { message: "Username must be at least 3 characters long" })
     .max(20, { message: "Username must be at most 20 characters long" })
-    .regex(/^[a-zA-Z0-9_]+$/, {
-      message: "Username can only contain letters, numbers and underscores",
+    .regex(/^[a-zA-Z0-9_-]+$/,{
+      message: "Username can only contain letters, numbers, underscores and hyphens",
     }),
     email: z.string()
     .min(1, { message: "Email is required" })
@@ -104,7 +104,7 @@ export const UserSchema = z.object({
     .string().optional(),
   image: z
     .string()
-    .url({ message: "Image must be a valid URL" }).optional(),
+    .url({ message: "Image must be a valid URL" }),
   location: z
     .string().optional(),
   portfolio: z
@@ -142,12 +142,19 @@ export const AccountValidationSchema = z.object({
 });
 
 export type AccountDTO = z.infer<typeof AccountValidationSchema>;
+
+
 export const SignInOAuthSchema = z.object({
-  provider: z.string().min(1, { message: "Provider is required" }),
+  provider:z.enum(['google','github']),
   providerAccountId: z.string().min(1, { message: "Provider Account ID is required" }),
   user: z.object({
     name: z.string().min(1, { message: "Name is required" }),
+    username: z.string().min(3, { message: "Username must be at least 3 characters long" })
+      .max(20, { message: "Username must be at most 20 characters long" })
+      .regex(/^[a-zA-Z0-9_-]+$/, { // Updated regex to allow hyphens
+        message: "Username can only contain letters, numbers, underscores and hyphens",
+      }),
     email: z.string().min(1, { message: "Email is required" }).email({ message: "Invalid email address" }),
-    image: z.string().url({ message: "Image must be a valid URL" }).optional(),
+    image: z.string().url({ message: "Image must be a valid URL" }),
   }),
 });

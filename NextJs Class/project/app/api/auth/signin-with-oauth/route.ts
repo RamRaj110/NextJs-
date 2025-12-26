@@ -14,9 +14,11 @@ export async function POST(request: Request) {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-        const validatedData = SignInOAuthSchema.parse({ provider, providerAccountId, user });
-        if (!validatedData.success)
+        const validatedData = SignInOAuthSchema.safeParse({ provider, providerAccountId, user });
+        if (!validatedData.success){
+
             throw new ValidationError(validatedData.error.flatten().fieldErrors);
+        }
 
         const { name, username, email, image } = user
         const slugifiedUsername = slugify(username, {
@@ -27,11 +29,15 @@ export async function POST(request: Request) {
 
         let existingUser = await User.findOne({ email }).session(session)
         if (!existingUser) {
-            existingUser = await User.create([{ name, username: slugifiedUsername, email, image }], { session })
+           existingUser = await User.create(
+                { name, username: slugifiedUsername, email, image },
+                { session }
+                );
+
         } else {
-            const updatedData = { name?: string; image?: string; } = {};
-            if (existingUser.name !== name) updatedData.image = image;
-            if (existingUser.image !== image) updatedData.name = name;
+            const updatedData: Partial<typeof user> = {};
+        if (existingUser.name !== name) updatedData.name = name;
+if (existingUser.image !== image) updatedData.image = image;
             if (Object.keys(updatedData).length > 0) {
                 await User.updateOne(
                     { id: existingUser.id },
@@ -39,7 +45,7 @@ export async function POST(request: Request) {
                 ).session(session)
             }
         }
-        const existingAccount = await User.findOne({
+        const existingAccount = await Account.findOne({
             userId: existingUser.id,
             provider,
             providerAccountId
@@ -48,7 +54,8 @@ export async function POST(request: Request) {
             await Account.create([{
                 userId: existingUser.id,
                 provider,
-                providerAccountId
+                providerAccountId,
+                name:provider,
             }], { session })
         }
         await session.commitTransaction();
