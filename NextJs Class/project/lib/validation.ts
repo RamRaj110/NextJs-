@@ -143,3 +143,12 @@ export const AccountValidationSchema = z.object({
 });
 
 export type AccountDTO = z.infer<typeof AccountValidationSchema>;
+export const SignInOAuthSchema = z.object({
+  provider: z.string().min(1, { message: "Provider is required" }),
+  providerAccountId: z.string().min(1, { message: "Provider Account ID is required" }),
+  user: z.object({
+    name: z.string().min(1, { message: "Name is required" }),
+    email: z.string().min(1, { message: "Email is required" }).email({ message: "Invalid email address" }),
+    image: z.string().url({ message: "Image must be a valid URL" }).optional(),
+  }),
+});

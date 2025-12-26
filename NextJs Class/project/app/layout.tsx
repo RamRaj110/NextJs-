@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Project",
+  title: "Reactify ",
   description: "A Next.js project using the App Router and Google Fonts.",
 };
 
