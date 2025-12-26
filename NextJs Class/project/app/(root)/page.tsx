@@ -1,10 +1,9 @@
+import { auth } from "@/auth"
 import QuestionCard from "@/components/cards/QuestionCard"
 import HomeFilter from "@/components/filter/HomeFilter"
 import LocalSearch from "@/components/search/LocalSearch"
 import { Button } from "@/components/ui/button"
 import ROUTES from "@/constant/routes"
-import { api } from "@/lib/api"
-import handleError from "@/lib/handlers/errors"
 import Link from "next/link"
 
 const questions = [
@@ -64,16 +63,11 @@ const questions = [
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
 }
-const test = async()=>{
-  try {
-    return await api.users.getAll();
-  }catch(error){
-    return handleError(error,"api");
-  }
-}
+const session = await auth()
+console.log("session",session)
 const Home = async ({ searchParams }: SearchParams) => {
-  const users = await test();
-  console.log("users",users);
+  // const users = await test();
+  // console.log("users",users);
   const { search = '', filter = '' } = await searchParams;
 
   const filteredQuestions = questions.filter((question) => {

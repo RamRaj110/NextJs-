@@ -18,8 +18,6 @@ const Home = () => {
             
           }}
           onSubmit ={(data)=> Promise.resolve({success: true,data})}
-          
-      
       />
 
 
