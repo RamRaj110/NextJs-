@@ -150,11 +150,11 @@ export const SignInOAuthSchema = z.object({
   user: z.object({
     name: z.string().min(1, { message: "Name is required" }),
     username: z.string().min(3, { message: "Username must be at least 3 characters long" })
-      .max(20, { message: "Username must be at most 20 characters long" })
-      .regex(/^[a-zA-Z0-9_-]+$/, { // Updated regex to allow hyphens
-        message: "Username can only contain letters, numbers, underscores and hyphens",
+      .max(50, { message: "Username must be at most 50 characters long" })
+      .regex(/^[a-zA-Z0-9_.-]+$/, { // Updated regex to allow hyphens and dots
+        message: "Username can only contain letters, numbers, underscores, hyphens, and dots",
       }),
     email: z.string().min(1, { message: "Email is required" }).email({ message: "Invalid email address" }),
-    image: z.string().url({ message: "Image must be a valid URL" }),
+    image: z.string().url({ message: "Image must be a valid URL" }).optional(),
   }),
 });

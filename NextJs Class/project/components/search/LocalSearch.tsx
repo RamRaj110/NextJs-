@@ -19,28 +19,28 @@ function LocalSearch({route,placeholder,otherClasses}:Props) {
 
   const [query,setQuery] = useState(searchQuery);
 
-  useEffect(()=>{
-    const delayDebounce = setTimeout(()=>{
-          if(query){
-      const newUrl =formUrlQuery({
-        params: searchParam.toString(),
-        key:'search',
-        value:query
-      })
-      router.push(newUrl,{scroll:false})
-    }else{
-if(pathname === route){
-        const newUrl = removeKeyformUrlQuery({
-          params: searchParam.toString(),
-         keyToRemove:['search']
-        })
-        router.push(newUrl,{scroll:false});
-}       
-}
-    },500);
+const searchParamsString = searchParam.toString();
 
-    return ()=> clearTimeout(delayDebounce);
-  },[query,router,searchParam,route,pathname])
+useEffect(() => {
+  const delayDebounce = setTimeout(() => {
+    if (query) {
+      const newUrl = formUrlQuery({
+        params: searchParamsString,
+        key: 'search',
+        value: query,
+      });
+      router.push(newUrl, { scroll: false });
+    } else if (pathname === route) {
+      const newUrl = removeKeyformUrlQuery({
+        params: searchParamsString,
+        keyToRemove: ['search'],
+      });
+      router.push(newUrl, { scroll: false });
+    }
+  }, 500);
+
+  return () => clearTimeout(delayDebounce);
+}, [query, pathname, route,router, searchParamsString]);
 
 
   return (

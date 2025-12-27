@@ -25,19 +25,18 @@ export async function POST(request: Request) {
             lower: true,
             strict: true,
             trim: true,
-        })
-
-        let existingUser = await User.findOne({ email }).session(session)
-        if (!existingUser) {
-           existingUser = await User.create(
-                { name, username: slugifiedUsername, email, image },
-                { session }
-                );
-
+        });
+let existingUser = await User.findOne({ email }).session(session)
+if (!existingUser) {
+    const [newUser] = await User.create(
+        [{ name, username: slugifiedUsername, email, image: image || 'https://via.placeholder.com/150' }],
+        { session }
+    );
+    existingUser = newUser;
         } else {
             const updatedData: Partial<typeof user> = {};
         if (existingUser.name !== name) updatedData.name = name;
-if (existingUser.image !== image) updatedData.image = image;
+if (existingUser.image !== (image || existingUser.image)) updatedData.image = image || existingUser.image;
             if (Object.keys(updatedData).length > 0) {
                 await User.updateOne(
                     { id: existingUser.id },
@@ -59,7 +58,7 @@ if (existingUser.image !== image) updatedData.image = image;
             }], { session })
         }
         await session.commitTransaction();
-        return new Response(JSON.stringify({ message: 'Sign-in successful' }), { status: 200 });
+        return new Response(JSON.stringify({ success: true, message: 'Sign-in successful' }), { status: 200 });
     } catch (error) {
         await session.abortTransaction();
         return handleError(error, 'api') as APIErrorResponse;

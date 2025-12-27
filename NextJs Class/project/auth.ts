@@ -4,6 +4,7 @@ import Google from "next-auth/providers/google"
 import { ActionResponse } from "./Types/global";
 import { api } from "./lib/api";
 import { IAccount } from "./database/account.modules";
+import slugify from "slugify";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [GitHub,Google],
@@ -37,13 +38,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         name:user.name!,
         email:user.email!,
         image:user.image!,
-        username:account.provider==='github'? (profile?.login as string): (user.name?.toLowerCase().replace(/\s+/g, '_') as string)
+        username:account.provider==='github'? (profile?.login as string): slugify(user.name!, { lower: true, strict: true, trim: true })
       }
       const {success}= (await api.auth.oAuthSignIn({
         user:userInfo,
         provider:account.provider as "github" | "google",
         providerAccountId:account.providerAccountId,
       })) as ActionResponse;
+      console.log('OAuth User Info:', userInfo);
       if(!success) return false;
       return true;
     }
