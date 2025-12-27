@@ -1,7 +1,7 @@
 "use client";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner"
-import  ROUTES  from "@/constant/routes";
+import  ROUTES  from "@/constant/route";
 
 function SocialAuth() {
  

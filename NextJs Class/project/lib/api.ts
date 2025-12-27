@@ -1,7 +1,7 @@
 import { IUser } from "@/database/user.modules";
 import { fetchHandler } from "./handlers/fetch";
 import { IAccount } from "@/database/account.modules";
-import ROUTES from "@/constant/routes";
+import ROUTES from "@/constant/route";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
 

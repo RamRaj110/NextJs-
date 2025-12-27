@@ -3,7 +3,7 @@ import QuestionCard from "@/components/cards/QuestionCard"
 import HomeFilter from "@/components/filter/HomeFilter"
 import LocalSearch from "@/components/search/LocalSearch"
 import { Button } from "@/components/ui/button"
-import ROUTES from "@/constant/routes"
+import ROUTES from "@/constant/route"
 import Link from "next/link"
 
 const questions = [

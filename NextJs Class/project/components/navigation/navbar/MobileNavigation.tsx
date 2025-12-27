@@ -10,7 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import ROUTES from "@/constant/routes" 
+import ROUTES from "@/constant/route" 
 import NavLink from './NavLink'
 const MobileNavigation = () => {
   return (

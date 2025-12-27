@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import ROUTES from '@/constant/routes';
+import ROUTES from '@/constant/route';
 import TagCard from '../cards/TagCard';
 import { ChevronRight } from 'lucide-react';
 

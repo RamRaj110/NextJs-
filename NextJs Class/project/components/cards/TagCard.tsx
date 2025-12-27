@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import ROUTES from '@/constant/routes';
+import ROUTES from '@/constant/route';
 import { Badge } from '../ui/badge';
 import { getIconClassName } from '@/lib/utils';
 

@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import ROUTES from "@/constant/routes";
+import ROUTES from "@/constant/route";
 import { Eye, MessageCircle, ThumbsUp, } from "lucide-react";
 import Image from "next/image";
 import { getTimestamp } from "@/lib/utils";

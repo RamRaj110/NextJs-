@@ -1,7 +1,7 @@
 import React from 'react'
 import NavLink from './navbar/NavLink'
 import Link from 'next/link'
-import ROUTES from '@/constant/routes'
+import ROUTES from '@/constant/route'
 import { Button } from '../ui/button'
 import { LogIn, UserPlus } from 'lucide-react'
 
