@@ -47,22 +47,8 @@ export const SignUpSchema = z.object({
       })
       .regex(/[`!@#$%^&*()_\-+=[\]{};':"\\|,.<>/?~ ]/, {
         message: "Password must contain at least one special character",
-      }), // [web:5][web:14]
-
-    confirmPassword: z
-      .string()
-      .min(1, { message: "Confirm password is required" }),
-    phone: z
-      .string()
-      .regex(/^[0-9]{10}$/, {
-        message: "Phone must be 10 digits",
-      })
-      .optional(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+      }),
+});
 
 export const AskQuestionSchema = z.object({
   title: z

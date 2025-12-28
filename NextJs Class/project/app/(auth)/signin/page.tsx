@@ -1,7 +1,6 @@
 "use client"
 
 import AuthForm from '@/components/forms/AuthForm'
-import { SignInSchema } from '@/lib/validation'
 
 
 const Home = () => {
@@ -9,7 +8,6 @@ const Home = () => {
   <div>
     <AuthForm 
     formType="SIGNIN"
-    schema = {SignInSchema}
     defaultValues = {{
       email: '',
       password: ''

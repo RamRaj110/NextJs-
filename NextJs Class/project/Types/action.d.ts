@@ -8,3 +8,26 @@ interface SignWithOAuthParams {
         username:string
     }
 }
+
+interface AuthCredentials {
+    name:string,
+    username:string,
+    email:string,
+    password:string,
+}
+
+type IUserDoc = {
+    id: string;
+    name: string;
+    username: string;
+    email: string;
+    image: string;
+}
+
+type IAccountDoc = {
+    userId: string;
+    name: string;
+    provider: string;
+    providerAccountId: string;
+    password?: string;
+}
