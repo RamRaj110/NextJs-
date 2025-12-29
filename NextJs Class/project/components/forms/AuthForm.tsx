@@ -75,6 +75,15 @@ const AuthForm = (props: AuthFormProps) => {
           redirect: false
         });
       }
+
+      if(formType === 'SIGNIN') {
+        // Sign in the user after successful validation
+        await signIn("credentials", {
+          email: (data as SignInFormData).email,
+          password: (data as SignInFormData).password,
+          redirect: false
+        });
+      }
       
       router.push(ROUTES.HOME)
     } else {
