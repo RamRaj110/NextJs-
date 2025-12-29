@@ -30,22 +30,21 @@ export async function signUpWithCredentials(params:AuthCredentials):Promise<Acti
             throw new Error("Username is already taken");
         }
         const hashedPassword = await bcrypt.hash(password,12);
-        const newUser = await User.create({
+        const [newUser] = await User.create([{
             name,
             username,
             email,
             image: `https://api.dicebear.com/7.x/initials/svg?seed=${username}`,
-        }, {session}) as any;
+        }], {session}) as any;
 
-        await Account.create({
+        await Account.create([{
             userId:newUser._id,
             name,
             provider:'credentials',
-            providerAccountId:email, // Use email as providerAccountId for credentials
+            providerAccountId:email,
             password :hashedPassword,
-        }, {session})
+        }], {session})
         await session.commitTransaction();
-        // Note: signIn should be called from client side after successful signup
         return{success:true, message: "Account created successfully"}
 
 

@@ -16,7 +16,8 @@ const formatResponse = (
         error:{
             message,
             details:errors,
-        }
+        },
+        message, // Added top-level message
     }
     return responseType === 'api' ?
     NextResponse.json(responseContent, {status}) :
