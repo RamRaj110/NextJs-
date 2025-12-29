@@ -63,11 +63,7 @@ const questions = [
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
 }
-const session = await auth()
-console.log("session",session)
 const Home = async ({ searchParams }: SearchParams) => {
-  // const users = await test();
-  // console.log("users",users);
   const { search = '', filter = '' } = await searchParams;
 
   const filteredQuestions = questions.filter((question) => {

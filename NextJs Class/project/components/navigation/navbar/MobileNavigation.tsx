@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Menu, LogIn, UserPlus } from 'lucide-react'
+import { Menu, LogIn, UserPlus, LogOut } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import {
   Sheet,
@@ -12,7 +12,11 @@ import {
 } from "@/components/ui/sheet"
 import ROUTES from "@/constant/route" 
 import NavLink from './NavLink'
-const MobileNavigation = () => {
+import { auth, signOut } from '@/auth'
+const MobileNavigation = async() => {
+  const session =await auth()
+  const userId = session?.user?.id;
+
   return (
     <Sheet>
       {/* Trigger Button */}
@@ -48,8 +52,23 @@ const MobileNavigation = () => {
 
         {/* Authentication Buttons */}
         <div className="flex flex-col gap-4 p-1 ">
-            
-            {/* Login Button */}
+          {
+            userId ? (
+             <form 
+        action={async ()=>{
+          "use server"
+          await signOut()
+        }}
+        >
+            <Button type='submit' variant="outline" className="w-full h-11 bg-transparent border-border hover:bg-secondary gap-2
+            md:justify-center lg:justify-start px-0 lg:px-4">
+            <LogOut size={20} className="text-muted-foreground" />
+            <span className="font-medium max-lg:hidden">Logout</span>
+          </Button>
+        </form>
+            ):(
+              <>
+   {/* Login Button */}
             <Link href={ROUTES.SIGNIN || "/signin"} className="w-full">
                 <Button variant="outline" className="w-full justify-start gap-2 h-11 bg-transparent border-border hover:bg-secondary">
                     <LogIn size={18} className="text-muted-foreground" />
@@ -64,6 +83,11 @@ const MobileNavigation = () => {
                     <span className="font-bold">Sign Up</span>
                 </Button>
             </Link>
+            </>
+            )
+          }
+            
+         
 
         </div>
       </SheetContent>

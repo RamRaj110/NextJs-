@@ -4,8 +4,11 @@ import { Search, Menu,  } from 'lucide-react';
 import Theme from './Theme';
 import Link from 'next/link';
 import MobileNavigation from './MobileNavigation';
+import { auth } from '@/auth';
+import UserAvtar from '@/components/UserAvtar';
 
-function Navbar() {
+const  Navbar=async()=> {
+  const session = await auth()
   return (
     <nav className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -39,6 +42,13 @@ function Navbar() {
             <div className="hover:bg-accent hover:text-accent-foreground p-2 rounded-full transition-colors">
                  <Theme />
             </div>
+            {session?.user?.id&&(
+              <UserAvtar id={session.user.id}
+              name={session.user.name}
+            imageUrl={session.user?.image}
+              />
+            )}
+
             <MobileNavigation />
           </div>
 

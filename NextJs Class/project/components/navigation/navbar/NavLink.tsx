@@ -6,9 +6,8 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import { SheetClose } from "@/components/ui/sheet";
 
-function NavLink({ isMobileNav = false }: { isMobileNav?: boolean }) {
+function NavLink({ isMobileNav = false,userId }: { isMobileNav?: boolean;userId?:string }) {
   const pathname = usePathname();
-  const userId = 1
 
   return (
     <div className="flex flex-col gap-2 w-full">
