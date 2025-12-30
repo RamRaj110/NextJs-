@@ -1,15 +1,17 @@
 'use server';
 
 import { ActionResponse, ErrorResponse } from "@/Types/global";
+import { CreateQuestionParams } from "@/Types/action";
 import action from "../handlers/action";
 import { AskQuestionSchema } from "../validation";
 import handleError from "../handlers/errors";
 import monngoose from "mongoose";
-import Question from "@/database/question.modules";
 import Tag from "@/database/tag.modules";
+import TagQuestion from "@/database/tagquestion.modules";
+import Question from "@/database/question.modules";
 
 
-export async function createQuestion(params: CreateQuestionParams):Promise<ActionResponse> {
+export async function createQuestion(params: CreateQuestionParams):Promise<ActionResponse<Question>> {
     const validationResult = await action({
         params,
         schema:AskQuestionSchema,
@@ -19,7 +21,7 @@ export async function createQuestion(params: CreateQuestionParams):Promise<Actio
     if(validationResult instanceof Error){
         return handleError(validationResult) as  ErrorResponse;
     }
-    const {title,content,tags} = validationResult.params;
+    const {title,content,tags} = validationResult.params!;
     const userId = validationResult?.session?.user?.id;
 
 
@@ -55,8 +57,7 @@ export async function createQuestion(params: CreateQuestionParams):Promise<Actio
         await session.commitTransaction();
         return {
             success:true,
-            message:'Question created successfully',
-            data:question,
+            data: { id: question.id, ...question.toObject() }
         };
     } catch (error) {
         await session.abortTransaction();

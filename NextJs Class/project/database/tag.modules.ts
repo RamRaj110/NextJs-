@@ -1,13 +1,12 @@
 import { model, models, Schema, Types,  } from "mongoose";
 
 export interface ITag{
-    tag:Types.ObjectId,
-    question:Types.ObjectId
- 
+    name: string;
+    questionCount: number;
 }
 const TagSchema =new Schema<ITag>({
-    tag:{type:Schema.Types.ObjectId,ref:"Tag",required:true},
-    question:{type:Schema.Types.ObjectId,ref:"Question",required:true},
+    name:{type:String,required:true},
+    questionCount:{type:Number,default:0},
 },{
     timestamps:true
 })

@@ -20,12 +20,17 @@ import {
 } from '@/components/ui/form';
 import { AskQuestionSchema } from '@/lib/validation'; 
 import TagCard from '../cards/TagCard';
+import { createQuestion } from '@/lib/actions/question.action';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import ROUTES from '@/constant/route';
 
 const Editor = dynamic(
   () => import("@/components/editor/MDXeditor"),
   { ssr: false }
 );
 const QuestionForm = () => {
+    const router =  useRouter()
   const form = useForm<z.infer<typeof AskQuestionSchema>>({
     resolver: zodResolver(AskQuestionSchema),
     defaultValues: {
@@ -38,9 +43,19 @@ const QuestionForm = () => {
   const { isSubmitting } = form.formState;
 
   const handleCreateQuestion = async (values: z.infer<typeof AskQuestionSchema>) => {
-    console.log("Form Data:", values);
-    form.reset();
-    // Add your API call here
+    const result= await createQuestion(values)
+    if(result.success){
+      toast.success("Question Created successfully", {
+        description: "Your question has been created successfully"
+      })
+      if(result.data){
+        router.push(ROUTES.QUESTION(result.data.id))
+      }
+    }else{
+      toast.error(`Error ${result.status}`, {
+        description: result.error?.message||"Something went wrong"
+      })
+    }
   };
 
   const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>, field: any) => {
