@@ -57,7 +57,7 @@ export async function createQuestion(params: CreateQuestionParams):Promise<Actio
         await session.commitTransaction();
         return {
             success:true,
-            data: { id: question.id, ...question.toObject() }
+           data: JSON.parse(JSON.stringify({ id: question.id, ...question.toObject() }))
         };
     } catch (error) {
         await session.abortTransaction();
@@ -137,11 +137,11 @@ export async function editQuestion(params: EditQuestionParams):Promise<ActionRes
         }
         await question.save({ session });
 
-        await session.commitTransaction();
-        return {
-            success:true,
-            data: JSON.parse(JSON.stringify(question))
-        };
+     const populatedQuestion = await Questions.findById(question.id).populate('tags');
+return {
+    success: true,
+    data: JSON.parse(JSON.stringify({ id: populatedQuestion.id, ...populatedQuestion.toObject() }))
+};
 
     } catch (error) {
         await session.abortTransaction();
@@ -168,10 +168,10 @@ export async function getQuestion(params: getQuestionsParams):Promise<ActionResp
         if(!question){
             throw new Error('Question not found');
         }
-        return {
-            success:true,
-            data: JSON.parse(JSON.stringify(question))
-        };
+      return {
+    success: true,
+   data: JSON.parse(JSON.stringify({ id: question.id, ...question.toObject() }))
+};
         
     } catch (error) {
         return handleError(error as Error) as ErrorResponse;

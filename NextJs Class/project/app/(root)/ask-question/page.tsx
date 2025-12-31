@@ -8,8 +8,8 @@ const AskQuestion = async() => {
   if(!session) return redirect('/signin')
   return (
     <>
-   <h1> Ask a Question</h1>
-   <div>
+   <h1 className='font-bold text-2xl'> Ask a Question</h1>
+   <div className='mt-6'>
     <QuestionForm />
    </div>
     </>

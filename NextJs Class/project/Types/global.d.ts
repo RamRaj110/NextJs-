@@ -13,7 +13,7 @@ interface Tag{
 }
 
 interface Question{
-    id: number;
+    id: string;
     title: string;
     content: string;
     description: string;
