@@ -8,6 +8,7 @@ import slugify from "slugify";
 import Credentials from "next-auth/providers/credentials"
 import { SignInSchema } from "./lib/validation";
 import bcrypt from "bcryptjs";
+import { IUserDoc } from "./Types/action";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [GitHub,Google,Credentials({

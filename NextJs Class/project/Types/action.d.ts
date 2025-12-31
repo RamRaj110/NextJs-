@@ -32,8 +32,21 @@ type IAccountDoc = {
     password?: string;
 }
 
+type ITagDoc = {
+    id: string;
+    name: string;
+    questionCount: number;
+}
+
 export interface CreateQuestionParams{
     title:string;
     content:string;
     tags:string[];
+}
+export interface EditQuestionParams extends CreateQuestionParams{
+    questionId:string;
+}
+
+export interface getQuestionsParams{
+    questionId:string[];
 }
