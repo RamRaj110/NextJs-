@@ -1,4 +1,3 @@
-import { auth } from "@/auth"
 import QuestionCard from "@/components/cards/QuestionCard"
 import HomeFilter from "@/components/filter/HomeFilter"
 import LocalSearch from "@/components/search/LocalSearch"
@@ -22,18 +21,6 @@ const Home = async ({ searchParams }: SearchParams) => {
     filter: filter || '',
   })
   const {questions} =  data || {};
-
-
-  // const filteredQuestions = questions.filter((question) => {
-  //   const matchesSearch = question.title.toLowerCase().includes(search.toLowerCase());
-
-  //   const matchesFilter = filter 
-  //     ? question.tags[0].name.toLowerCase() === filter.toLowerCase() 
-  //     : true; 
-  //   return matchesSearch && matchesFilter;
-  // });
-
-
   return (
     <>
       <section className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -58,8 +45,8 @@ const Home = async ({ searchParams }: SearchParams) => {
    {success ? (
       <div className="mt-10 flex w-full flex-col gap-6">
         {questions && questions.length > 0 ? (
-            questions.map((question) => (
-              <QuestionCard key={question.id} question={question} />
+            questions.map((question,index) => (
+              <QuestionCard key={index} question={question} />
             ))
         ) : (
              <div className="mt-10 flex w-full items-center justify-center">

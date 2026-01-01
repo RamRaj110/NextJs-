@@ -63,10 +63,10 @@ const QuestionCard = ({ question }: Props) => {
 
       {/* --- Tags Section --- */}
       <div className="mt-3.5 flex flex-wrap gap-2">
-        {tags.map((tag) => (
+        {tags.map((tag,index) => (
           // Using TagCard with compact prop so they sit side-by-side
           <TagCard 
-            key={tag.id} 
+            key={index} 
             id={tag.id} 
             name={tag.name} 
             compact={true} 
