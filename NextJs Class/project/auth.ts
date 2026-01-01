@@ -8,7 +8,7 @@ import slugify from "slugify";
 import Credentials from "next-auth/providers/credentials"
 import { SignInSchema } from "./lib/validation";
 import bcrypt from "bcryptjs";
-import { IUserDoc } from "./Types/action";
+import { IAccountDoc, IUserDoc } from "./Types/action";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [GitHub,Google,Credentials({
@@ -29,7 +29,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             name:existingUser.name,
             email:existingUser.email,
             image:existingUser.image
-          } as any
+          } as any;
         }
         return null;
       }
@@ -57,7 +57,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return token;
     },
-    async signIn({user,profile,account}) {
+     async signIn({user,profile,account}) {
       if(account?.type === 'credentials') return true;
       if(!account || !user) return false;
 

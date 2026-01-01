@@ -137,11 +137,14 @@ export async function editQuestion(params: EditQuestionParams):Promise<ActionRes
         }
         await question.save({ session });
 
-     const populatedQuestion = await Questions.findById(question.id).populate('tags');
-return {
-    success: true,
-    data: JSON.parse(JSON.stringify({ id: populatedQuestion.id, ...populatedQuestion.toObject() }))
-};
+        // Commit the transaction so the changes are persisted
+        await session.commitTransaction();
+
+        const populatedQuestion = await Questions.findById(question.id).populate('tags');
+        return {
+            success: true,
+            data: JSON.parse(JSON.stringify({ id: populatedQuestion.id, ...populatedQuestion.toObject() }))
+        };
 
     } catch (error) {
         await session.abortTransaction();
