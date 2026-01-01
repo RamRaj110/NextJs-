@@ -6,6 +6,7 @@ import Image from "next/image";
 import { getTimestamp } from "@/lib/utils";
 import TagCard from "./TagCard";
 import Metric from "../Matric";
+import { Question } from "@/Types/global";
 
 interface Props {
   question: Question;
@@ -88,7 +89,7 @@ const QuestionCard = ({ question }: Props) => {
               />
            ) : (
              <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">
-                {author.name[0]}
+                {author?.name?.[0]?? ''}
              </div>
            )}
             

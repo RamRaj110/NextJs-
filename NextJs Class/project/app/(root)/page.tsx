@@ -4,76 +4,36 @@ import HomeFilter from "@/components/filter/HomeFilter"
 import LocalSearch from "@/components/search/LocalSearch"
 import { Button } from "@/components/ui/button"
 import ROUTES from "@/constant/route"
+import {  getQuestions } from "@/lib/actions/question.action"
 import Link from "next/link"
-
-const questions = [
-  {
-    id: 1,
-    title: 'How to learn Next.js?',
-    content: 'I am new to web development and want to learn Next.js...',
-    description: 'Looking for resources and tips to get started with Next.js.',
-    tags: [{ id: 1, name: 'Next.js' }, { id: 2, name: 'Web Development' }],
-    author: { id: 1, name: 'John Doe' },
-    upvotes: 10,
-    answers: 2,
-    views: 150,
-    createdAt: '2023-10-01T10:00:00Z'
-  }, 
-  {
-    id: 2,
-    title: 'How to learn JavaScript?',
-    content: 'I am new to web development...',
-    description: 'Looking for resources and tips to get started with JS.',
-    tags: [{ id: 3, name: 'JavaScript' }, { id: 2, name: 'Web Development' }],
-    author: { id: 1, name: 'John Doe' },
-    upvotes: 10,
-    answers: 5,
-    views: 200,
-    image:'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.tvaMwK3QuFxhTYg4PSNNVAHaHa%3Fcb%3Ducfimg2%26pid%3DApi%26ucfimg%3D1&f=1&ipt=7b8313f1cb91f9661c0fab1d3ff1d9384ebfe8b337b65d3309c089007f9e18f7&ipo=images',
-    createdAt: '2023-10-02T10:00:00Z'
-  }, {
-    id: 3,
-    title: 'How to learn React?',
-    content: 'I am new to web development...',
-    description: 'Looking for resources and tips to get started with JS.',
-    tags: [{ id: 3, name: 'React' }, { id: 2, name: 'Web Development' }],
-    author: { id: 1, name: 'John Doe' },
-    upvotes: 10,
-    answers: 5,
-    views: 200,
-    image:'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.tvaMwK3QuFxhTYg4PSNNVAHaHa%3Fcb%3Ducfimg2%26pid%3DApi%26ucfimg%3D1&f=1&ipt=7b8313f1cb91f9661c0fab1d3ff1d9384ebfe8b337b65d3309c089007f9e18f7&ipo=images',
-    createdAt: '2023-10-02T10:00:00Z'
-  },
-   {
-    id: 4,
-    title: 'How to learn node?',
-    content: 'I am new to web development...',
-    description: 'Looking for resources and tips to get started with JS.',
-    tags: [{ id: 3, name: 'Node' }, { id: 2, name: 'Web Development' }],
-    author: { id: 1, name: 'John Doe' },
-    upvotes: 10,
-    answers: 5,
-    views: 200,
-    image:'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.tvaMwK3QuFxhTYg4PSNNVAHaHa%3Fcb%3Ducfimg2%26pid%3DApi%26ucfimg%3D1&f=1&ipt=7b8313f1cb91f9661c0fab1d3ff1d9384ebfe8b337b65d3309c089007f9e18f7&ipo=images',
-    createdAt: '2023-10-02T10:00:00Z'
-  }
-]
 
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
 }
 const Home = async ({ searchParams }: SearchParams) => {
-  const { search = '', filter = '' } = await searchParams;
 
-  const filteredQuestions = questions.filter((question) => {
-    const matchesSearch = question.title.toLowerCase().includes(search.toLowerCase());
+  const {page, pageSize, query , filter} = await searchParams;
 
-    const matchesFilter = filter 
-      ? question.tags[0].name.toLowerCase() === filter.toLowerCase() 
-      : true; 
-    return matchesSearch && matchesFilter;
-  });
+  const { success, data,error} = await getQuestions({
+    page: Number(page) || 1,
+    pageSize: Number(pageSize) || 10,
+    query: query || '',
+    filter: filter || '',
+  })
+  const {questions} =  data || {};
+
+
+  // const filteredQuestions = questions.filter((question) => {
+  //   const matchesSearch = question.title.toLowerCase().includes(search.toLowerCase());
+
+  //   const matchesFilter = filter 
+  //     ? question.tags[0].name.toLowerCase() === filter.toLowerCase() 
+  //     : true; 
+  //   return matchesSearch && matchesFilter;
+  // });
+
+
   return (
     <>
       <section className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -95,9 +55,10 @@ const Home = async ({ searchParams }: SearchParams) => {
       </section>
 
    <HomeFilter />
+   {success ? (
       <div className="mt-10 flex w-full flex-col gap-6">
-        {filteredQuestions.length > 0 ? (
-            filteredQuestions.map((question) => (
+        {questions && questions.length > 0 ? (
+            questions.map((question) => (
               <QuestionCard key={question.id} question={question} />
             ))
         ) : (
@@ -106,6 +67,11 @@ const Home = async ({ searchParams }: SearchParams) => {
              </div>
         )}
       </div>
+   ):(
+    <div className="mt-10 flex w-full items-center justify-center">
+      <p className="text-red-500">{error?.message || 'Failed to load questions.'}</p>
+    </div>
+   )}
     </>
   )
 }

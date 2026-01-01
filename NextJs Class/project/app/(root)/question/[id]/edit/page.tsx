@@ -3,7 +3,6 @@ import QuestionForm from '@/components/forms/QuestionForm'
 import ROUTES from '@/constant/route';
 import { getQuestion } from '@/lib/actions/question.action';
 import { RouteParams } from '@/Types/global';
-import { get } from 'http';
 import { notFound, redirect } from 'next/navigation';
 import React from 'react'
 

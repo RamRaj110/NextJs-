@@ -14,7 +14,7 @@ interface Props {
 }
 
 function TagCard({ id, name, questions, showCount, compact, children }: Props) {
-  const iconClass = getIconClassName(name);
+  const iconClass = getIconClassName(name || 'tag');
   
   const content = (
     <>

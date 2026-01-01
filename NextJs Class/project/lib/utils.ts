@@ -6,9 +6,6 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const getIconClassName = (iconName: string) => {
-  // NOTE: This regex strips special characters. 
-  // Ensure your input 'iconName' handles "C++" as "cpp" or "C#" as "csharp" before calling this,
-  // otherwise they might both resolve to "c".
   const normalizedIconName = iconName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
 
   const techMap: { [key: string]: string } = {

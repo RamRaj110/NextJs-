@@ -153,3 +153,11 @@ export const EditQuestionSchema = AskQuestionSchema.extend({
 export const GetQuestionsSchema = z.object({
   questionId: z.array(z.string().min(1)).min(1, { message: 'At least one Question ID is required' }),
 });
+
+export const PaginatedSearchParamsSchema = z.object({
+  page:z.number().int().positive().default(1),
+  pageSize:z.number().int().positive().max(100).default(10),
+  query:z.string().optional(),
+  filter:z.string().optional(),
+  sort:z.string().optional(),
+})

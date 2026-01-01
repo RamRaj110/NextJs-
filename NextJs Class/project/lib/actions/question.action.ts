@@ -1,14 +1,15 @@
 'use server';
 
-import { ActionResponse, ErrorResponse, Question } from "@/Types/global";
+import { ActionResponse, ErrorResponse, PaginatedSearchParams, Question } from "@/Types/global";
 import { CreateQuestionParams, EditQuestionParams, getQuestionsParams, ITagDoc } from "@/Types/action";
 import action from "../handlers/action";
-import { AskQuestionSchema, EditQuestionSchema, GetQuestionsSchema } from "../validation";
+import { AskQuestionSchema, EditQuestionSchema, GetQuestionsSchema, PaginatedSearchParamsSchema } from "../validation";
 import handleError from "../handlers/errors";
 import monngoose from "mongoose";
 import Tag from "@/database/tag.modules";
 import TagQuestion from "@/database/tagquestion.modules";
 import Questions from "@/database/question.modules";
+import { json } from "zod";
 
 
 export async function createQuestion(params: CreateQuestionParams):Promise<ActionResponse<Question>> {
@@ -179,4 +180,73 @@ export async function getQuestion(params: getQuestionsParams):Promise<ActionResp
     } catch (error) {
         return handleError(error as Error) as ErrorResponse;
     }
+}
+
+
+export async function getQuestions(params: PaginatedSearchParams): Promise<ActionResponse<{questions: Question[];isNext: boolean}>> {
+    const validationResult = await action({
+        params,
+        schema:PaginatedSearchParamsSchema,
+    });
+
+    if(validationResult instanceof Error){
+        return handleError(validationResult) as  ErrorResponse;
+    }
+    const {page = 1, pageSize = 10, query, filter, sort} = params;
+    const skip = (Number(page) - 1) * pageSize;
+    const limit = Number(pageSize) + 1; 
+
+    const filterQuery : FilterQuery<typeof Questions> = {};
+
+    if(filter === 'recommended'){
+        return {success:true,
+            data:{questions:[], isNext:false}
+        };
+    }
+
+    if(query){
+        filterQuery.$or = [
+            { title: { $regex: new RegExp(query, 'i') } },
+            { content: { $regex: new RegExp(query, 'i') } }
+        ]
+        }
+
+        let sortCriteria = { };
+
+        switch(filter){
+            case 'newest':
+                sortCriteria = { createdAt: -1 };
+                break;
+            case 'unanswered':
+                filterQuery.answers = 0;
+                sortCriteria = { createdAt: -1 };
+                break;
+            case 'popular':
+                sortCriteria = { upvotes: -1 };
+                break;
+            default:
+                sortCriteria = { createdAt: -1 };
+        }
+
+        try {
+            const  totalQuestions = await Questions.countDocuments(filterQuery);
+            const questions = await Questions.find(filterQuery)
+            // .populate('tags','name')
+            // .populate('author','name image')
+            .lean()
+            .sort(sortCriteria)
+            .skip(skip)
+            .limit(limit)
+
+            const isNext = totalQuestions > skip + questions.length;
+            return{
+                success:true,
+                data:{
+                    questions: JSON.parse(JSON.stringify(questions)),isNext
+                }
+            }
+        } catch (error) {
+            return handleError(error as Error) as ErrorResponse;
+            
+        }
 }
