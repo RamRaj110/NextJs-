@@ -44,7 +44,7 @@ function TagCard({ id, name, questions, showCount, compact, children }: Props) {
 
   return (
     <Link 
-      href={ROUTES.TAGS(id)} 
+      href={ROUTES.TAG(id)} 
       className={`flex justify-between gap-2 group items-center ${compact ? 'w-fit' : 'w-full'}`}
     >
       {content}

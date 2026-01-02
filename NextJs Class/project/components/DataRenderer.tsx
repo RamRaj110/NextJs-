@@ -1,0 +1,136 @@
+import { DEFAULT_EMPTY, DEFAULT_ERROR } from "@/constant/state";
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
+import { Button } from "./ui/button";
+
+interface Props<T> {
+  success: boolean;
+  error?: {
+    message: string;
+    details?: Record<string, string[]>;
+  };
+  data: T[] | null | undefined;
+  empty: {
+    title: string;
+    message: string;
+    button?: {
+      text: string;
+      href: string;
+    };
+  };
+  render: (data: T) => React.ReactNode;
+}
+
+interface StateSkeletonProps {
+  image: {
+    light: string;
+    dark: string;
+    alt: string;
+  };
+  title: string;
+  message: string;
+  button?: {
+    text: string;
+    href: string;
+  };
+}
+
+const StateSkeleton = ({
+  image,
+  title,
+  message,
+  button,
+}: StateSkeletonProps) => (
+  <div className="mt-16 flex w-full flex-col items-center justify-center sm:mt-20">
+    <>
+      <Image
+        src={image.dark}
+        alt={image.alt}
+        width={270}
+        height={200}
+        className="hidden object-contain dark:block"
+      />
+      <Image
+        src={image.light}
+        alt={image.alt}
+        width={270}
+        height={200}
+        className="block object-contain dark:hidden"
+      />
+    </>
+    
+    <h2 className="h2-bold text-foreground mt-8 text-xl font-bold">{title}</h2>
+    
+    <p className="body-regular text-muted-foreground my-3.5 max-w-md text-center">
+        {message}
+    </p>
+
+    {button && (
+      <Link href={button.href}>
+        <Button size="lg" className="mt-4 min-h-[46px] px-4 py-3 bg-primary text-primary-foreground hover:bg-primary/90">
+            {button.text}
+        </Button>
+      </Link>
+    )}
+  </div>
+);
+
+const DataRenderer = <T,>({
+  success,
+  error,
+  data,
+  empty = DEFAULT_EMPTY,
+  render,
+}: Props<T>) => {
+    // 1. Handle Error State
+  if (!success) {
+    return (
+      <StateSkeleton
+        image={{
+          light: "/error_light1.webp",
+          dark: "/error_dark.png",
+          alt: "Error state illustration",
+        }}
+        title={error?.message || DEFAULT_ERROR.title}
+        message={
+          error?.details
+            ? JSON.stringify(error.details, null, 2)
+            : DEFAULT_ERROR.message
+        }
+        // Fixed: button expects an object or undefined, not a string
+        button={undefined} 
+      />
+    );
+  }
+
+  // 2. Handle Empty State
+  if (!data || data.length === 0)
+    return (
+      <StateSkeleton
+        image={{
+          light: "/error_light1.webp", 
+          dark: "/error_dark.png", 
+          alt: "Empty state illustration",
+        }}
+        title={empty.title}
+        message={empty.message}
+        button={empty.button}
+      />
+    );
+
+  // 3. Handle Success State (Render List)
+  return (
+    <div className="mt-10 flex w-full flex-col gap-6">
+        {data.map((item, index) => (
+            // We use a fragment here to satisfy the requirement of returning a single parent
+            // checking if 'item' has an id would be better for the key, but index works as fallback
+            <React.Fragment key={index}>
+                {render(item)}
+            </React.Fragment>
+        ))}
+    </div>
+  );
+};
+
+export default DataRenderer;

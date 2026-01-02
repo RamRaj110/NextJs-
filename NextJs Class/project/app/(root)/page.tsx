@@ -1,32 +1,34 @@
-import QuestionCard from "@/components/cards/QuestionCard"
-import HomeFilter from "@/components/filter/HomeFilter"
-import LocalSearch from "@/components/search/LocalSearch"
-import { Button } from "@/components/ui/button"
-import ROUTES from "@/constant/route"
-import {  getQuestions } from "@/lib/actions/question.action"
-import Link from "next/link"
-
+import QuestionCard from "@/components/cards/QuestionCard";
+import DataRenderer from "@/components/DataRenderer";
+import HomeFilter from "@/components/filter/HomeFilter";
+import LocalSearch from "@/components/search/LocalSearch";
+import { Button } from "@/components/ui/button";
+import ROUTES from "@/constant/route";
+import { getQuestions } from "@/lib/actions/question.action";
+import Link from "next/link";
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
 }
 const Home = async ({ searchParams }: SearchParams) => {
+  const { page, pageSize, query, filter } = await searchParams;
 
-  const {page, pageSize, query , filter} = await searchParams;
-
-  const { success, data,error} = await getQuestions({
+  const { success, data, error } = await getQuestions({
     page: Number(page) || 1,
     pageSize: Number(pageSize) || 10,
-    query: query || '',
-    filter: filter || '',
-  })
-  const {questions} =  data || {};
+    query: query || "",
+    filter: filter || "",
+  });
+  const { questions } = data || {};
   return (
     <>
       <section className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
         <h1 className="h1-bold text-3xl font-bold">All Questions</h1>
-        
-        <Link href={ROUTES.ASK_QUESTION} className="flex justify-end max-sm:w-full">
+
+        <Link
+          href={ROUTES.ASK_QUESTION}
+          className="flex justify-end max-sm:w-full"
+        >
           <Button className="primary-gradient min-h-[46px] px-4 py-3 !text-light-900 w-full sm:w-auto">
             Ask a Question
           </Button>
@@ -34,33 +36,28 @@ const Home = async ({ searchParams }: SearchParams) => {
       </section>
 
       <section className="mt-11">
-        <LocalSearch 
-            route="/"
-            placeholder='Search questions...' 
-            otherClasses='flex-1' 
+        <LocalSearch
+          route="/"
+          placeholder="Search questions..."
+          otherClasses="flex-1"
         />
       </section>
 
-   <HomeFilter />
-   {success ? (
-      <div className="mt-10 flex w-full flex-col gap-6">
-        {questions && questions.length > 0 ? (
-            questions.map((question,index) => (
+      <HomeFilter />
+      <DataRenderer
+        success={success}
+        error={error}
+        data={questions}
+        render={(quesions) => (
+          <div className="mt-10 flex w-full flex-col gap-6">
+            {questions?.map((question, index) => (
               <QuestionCard key={index} question={question} />
-            ))
-        ) : (
-             <div className="mt-10 flex w-full items-center justify-center">
-                <p className="text-muted-foreground">No questions found.</p>
-             </div>
+            ))}
+          </div>
         )}
-      </div>
-   ):(
-    <div className="mt-10 flex w-full items-center justify-center">
-      <p className="text-red-500">{error?.message || 'Failed to load questions.'}</p>
-    </div>
-   )}
+      />
     </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
