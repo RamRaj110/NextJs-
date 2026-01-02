@@ -23,7 +23,7 @@ const formatNumber = (num: number): string => {
 
 const QuestionCard = ({ question }: Props) => {
   const { 
-    id, 
+    _id, 
     title, 
     tags, 
     author, 
@@ -45,7 +45,7 @@ const QuestionCard = ({ question }: Props) => {
             {getTimestamp(createdAt)}
           </span>
           
-          <Link href={ROUTES.QUESTION ? ROUTES.QUESTION(id) : '#'}>
+          <Link href={ROUTES.QUESTION ? ROUTES.QUESTION(_id) : '#'}>
             {/* INCREASED FONT SIZE HERE */}
             <h3 className="sm:text-2xl text-xl font-bold text-foreground line-clamp-1 flex-1 cursor-pointer">
               {title}
@@ -67,7 +67,7 @@ const QuestionCard = ({ question }: Props) => {
           // Using TagCard with compact prop so they sit side-by-side
           <TagCard 
             key={index} 
-            id={tag.id} 
+            id={tag._id} 
             name={tag.name} 
             compact={true} 
           />
@@ -78,29 +78,41 @@ const QuestionCard = ({ question }: Props) => {
       <div className="flex items-center justify-between mt-6 w-full flex-wrap gap-3">
         
         {/* Left Side: Author Info */}
-        <Link href={ROUTES.PROFILE(author.id)} className="flex items-center gap-2 group">
-           {author.image ? (
-              <Image
-                src={author.image} 
-                alt={author.name} 
-                width={20}
-                height={20}
-                className="h-5 w-5 rounded-full object-cover"
-              />
-           ) : (
-             <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">
-                {author?.name?.[0]?? ''}
-             </div>
-           )}
-            
-            <p className="body-medium text-foreground group-hover:text-primary transition-colors">
-              {author.name}
-            </p>
-            
+        {author ? (
+          <Link href={ROUTES.PROFILE(author._id)} className="flex items-center gap-2 group">
+             {author.image ? (
+                <Image
+                  src={author.image} 
+                  alt={author.name} 
+                  width={20}
+                  height={20}
+                  className="h-5 w-5 rounded-full object-cover"
+                />
+             ) : (
+               <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">
+                  {author.name?.[0] ?? ''}
+               </div>
+             )}
+              
+              <p className="body-medium text-foreground group-hover:text-primary transition-colors">
+                {author.name}
+              </p>
+              
+              <span className="small-regular text-muted-foreground line-clamp-1 max-sm:hidden">
+                  • asked {getTimestamp(createdAt)}
+              </span>
+          </Link>
+        ) : (
+          <div className="flex items-center gap-2">
+            <div className="h-5 w-5 rounded-full bg-muted flex items-center justify-center text-[10px] font-bold text-muted-foreground">
+              ?
+            </div>
+            <p className="body-medium text-muted-foreground">Unknown Author</p>
             <span className="small-regular text-muted-foreground line-clamp-1 max-sm:hidden">
-                • asked {getTimestamp(createdAt)}
+              • asked {getTimestamp(createdAt)}
             </span>
-        </Link>
+          </div>
+        )}
 
         {/* Right Side: Metrics */}
         <div className="flex items-center gap-4">
@@ -112,7 +124,7 @@ const QuestionCard = ({ question }: Props) => {
             />
            <Metric 
               icon={MessageCircle} 
-              value={formatNumber(answers.length || 0)} 
+              value={formatNumber(answers.toString().length || 0)} 
               title="Answers" 
               textStyles="text-foreground small-medium"
             />

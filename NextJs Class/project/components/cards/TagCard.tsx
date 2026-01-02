@@ -5,12 +5,12 @@ import { Badge } from '../ui/badge';
 import { getIconClassName } from '@/lib/utils';
 
 interface Props {
-  id: number;
+  id: string;
   name: string;
   questions?: number;
   showCount?: boolean;
   compact?: boolean;
-  children?: React.ReactNode; // Add children prop
+  children?: React.ReactNode;
 }
 
 function TagCard({ id, name, questions, showCount, compact, children }: Props) {
@@ -34,8 +34,6 @@ function TagCard({ id, name, questions, showCount, compact, children }: Props) {
       {children}
     </>
   );
-
-  // If children exist (remove button), don't use Link wrapper
   if (children) {
     return (
       <div className={`flex justify-between gap-2 group items-center ${compact ? 'w-fit' : 'w-full'}`}>

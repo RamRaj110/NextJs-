@@ -16,6 +16,6 @@ const VoteSchema =new Schema<Ivote>({
     timestamps:true
 })
 
-const vote = models?.vote || model<Ivote>("Vote",VoteSchema);
+const Vote = models?.Vote || model<Ivote>("Vote",VoteSchema);
 
-export default vote
+export default Vote

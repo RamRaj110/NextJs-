@@ -56,7 +56,7 @@ export async function createQuestion(
 
     for (const tag of tags) {
       const existingTag = await Tag.findOneAndUpdate(
-        { name: { $regex: `^${tag}$`, $optional: "i" } },
+        { name: { $regex: `^${tag}$`, $options: "i" } },
         { $setOnInsert: { name: tag }, $inc: { questionCount: 1 } },
         { new: true, upsert: true, session }
       );
@@ -160,8 +160,9 @@ export async function editQuestion(
       );
       question.tags = question.tags.filter(
         (tag: monngoose.Types.ObjectId) =>
-          !tagIdsToRemove.some((id: monngoose.Types.ObjectId) =>
-            id.equals(tag._id)
+          !tagIdsToRemove.some(
+            (id: monngoose.Types.ObjectId) =>
+              id.toString() === tag._id.toString()
           )
       );
     }
@@ -235,8 +236,7 @@ export async function getQuestions(
   const { page = 1, pageSize = 10, query, filter, sort } = params;
   const skip = (Number(page) - 1) * pageSize;
   const limit = Number(pageSize) + 1;
-
-  const filterQuery: FilterQuery<typeof Questions> = {};
+  const filterQuery: Record<string, any> = {};
 
   if (filter === "recommended") {
     return { success: true, data: { questions: [], isNext: false } };
@@ -269,8 +269,8 @@ export async function getQuestions(
   try {
     const totalQuestions = await Questions.countDocuments(filterQuery);
     const questions = await Questions.find(filterQuery)
-      // .populate('tags','name')
-      // .populate('author','name image')
+      .populate("tags", "name")
+      .populate("author", "name image")
       .lean()
       .sort(sortCriteria)
       .skip(skip)
