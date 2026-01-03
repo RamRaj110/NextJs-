@@ -11,7 +11,7 @@ interface Props<T> {
     details?: Record<string, string[]>;
   };
   data: T[] | null | undefined;
-  empty: {
+  empty?: {
     title: string;
     message: string;
     button?: {
@@ -19,7 +19,7 @@ interface Props<T> {
       href: string;
     };
   };
-  render: (data: T) => React.ReactNode;
+  render: (data: T[]) => React.ReactNode;
 }
 
 interface StateSkeletonProps {
@@ -115,15 +115,7 @@ const DataRenderer = <T,>({
         button={empty.button}
       />
     );
-  return (
-    <div className="mt-10 flex w-full flex-col gap-6">
-        {data.map((item, index) => (
-            <React.Fragment key={index}>
-                {render(item)}
-            </React.Fragment>
-        ))}
-    </div>
-  );
+  return render(data);
 };
 
 export default DataRenderer;
