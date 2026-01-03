@@ -1,4 +1,4 @@
-import { DEFAULT_EMPTY, DEFAULT_ERROR } from "@/constant/state";
+import { DEFAULT_EMPTY,EMPTY_QUESTION,  DEFAULT_ERROR } from "@/constant/state";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -80,7 +80,7 @@ const DataRenderer = <T,>({
   success,
   error,
   data,
-  empty = DEFAULT_EMPTY,
+  empty = EMPTY_QUESTION,
   render,
 }: Props<T>) => {
     // 1. Handle Error State
@@ -98,13 +98,10 @@ const DataRenderer = <T,>({
             ? JSON.stringify(error.details, null, 2)
             : DEFAULT_ERROR.message
         }
-        // Fixed: button expects an object or undefined, not a string
         button={undefined} 
       />
     );
   }
-
-  // 2. Handle Empty State
   if (!data || data.length === 0)
     return (
       <StateSkeleton
@@ -118,13 +115,9 @@ const DataRenderer = <T,>({
         button={empty.button}
       />
     );
-
-  // 3. Handle Success State (Render List)
   return (
     <div className="mt-10 flex w-full flex-col gap-6">
         {data.map((item, index) => (
-            // We use a fragment here to satisfy the requirement of returning a single parent
-            // checking if 'item' has an id would be better for the key, but index works as fallback
             <React.Fragment key={index}>
                 {render(item)}
             </React.Fragment>

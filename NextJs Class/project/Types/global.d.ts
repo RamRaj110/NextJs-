@@ -31,7 +31,11 @@ interface Question {
 interface ActionResponse<T = null> {
   success: boolean;
   data?: T;
-  message?: string;
+  error?:{
+    message: string;
+    details?: Record<string, string[]>;
+  }
+  status?: number;
 }
 
 type SuccessResponse<T = null> = ActionResponse<T> & {
