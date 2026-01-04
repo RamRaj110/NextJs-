@@ -6,9 +6,8 @@ import {
 import action from "../handlers/action";
 import { PaginatedSearchParamsSchema } from "../validation";
 import handleError from "../handlers/errors";
-import { Question, Tag } from "@/database";
-import Questions from "@/database/question.modules";
-import { GetTagQuestionsParams } from "@/Types/action";
+import { Tag } from "@/database";
+import type { GetTagQuestionsParams } from "@/Types/action";
 
 export const getTags = async (
   params: PaginatedSearchParams
@@ -79,7 +78,7 @@ export const getTagQuestions = async (
 ): Promise<ActionResponse<{ questions: Question[]; isNext: boolean }>> => {
   const validationResult = await action({
     params,
-    schema: GetTagQuestionsParams,
+    schema: GetTagQuestionsSchema,
   });
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
@@ -94,14 +93,6 @@ export const getTagQuestions = async (
 
   const skip = (Number(page) - 1) * Number(pageSize);
   const limit = Number(pageSize) + 1;
-  const filterQuery: Record<string, any> = {};
-
-  if (query) {
-    filterQuery.$or = [
-      { name: { $regex: new RegExp(query, "i") } },
-      { description: { $regex: new RegExp(query, "i") } },
-    ];
-  }
 
   try {
     const tag = await Tag.findById(tagId);
@@ -111,16 +102,25 @@ export const getTagQuestions = async (
         error: { message: "Tag not found" },
       };
     }
-    const totalTags = await Tag.countDocuments(filterQuery);
-    const tags = await Tag.find(filterQuery)
-      .sort(sortCriteria)
+    const filterQuery: Record<string, any> = {
+      tags: { $in: [tagId] },
+    };
+
+    if (query) {
+      filterQuery.title = { $regex: query, $options: 'i' }
+    }
+    const totalTags = await Question.countDocuments(filterQuery);
+
+    const tags = await Question.find(filterQuery)
+      .select('_id title views answers upvotes downvotes author createdAt')
+      .populate([{ path: 'author', select: "name image" }, { path: 'tags', select: "name" }])
       .skip(skip)
       .limit(limit);
 
     const isNext = totalTags > skip + tags.length;
     return {
       success: true,
-      data: { tags: JSON.parse(JSON.stringify(tags)), isNext },
+      data: { tag: JSON.parse(JSON.stringify(tag)), questions: JSON.parse(JSON.stringify(tags)), isNext },
     };
   } catch (error) {
     return handleError(error as Error) as ErrorResponse;

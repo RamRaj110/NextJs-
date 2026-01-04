@@ -1,32 +1,35 @@
-'use client'
+"use client";
 
-import ROUTES from '@/constant/route'
-import Link from 'next/link'
-import React, { useState } from 'react'
-import { Avatar, AvatarFallback } from './ui/avatar'
-import Image from 'next/image'
+import ROUTES from "@/constant/route";
+import Link from "next/link";
+import React, { useState } from "react";
+import { Avatar, AvatarFallback } from "./ui/avatar";
+import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 interface Props {
-  id: string
-  name: string
-  imageUrl?: string | null
-  className?: string
+  id: string;
+  name: string;
+  imageUrl?: string | null;
+  className?: string;
+  fallbackClassName?: string;
 }
 
 const UserAvatar = ({
   id,
   name,
   imageUrl,
-  className = 'h-9 w-9 rounded-full',
+  fallbackClassName,
+  className = "h-9 w-9 rounded-full",
 }: Props) => {
-  const [imgError, setImgError] = useState(false)
+  const [imgError, setImgError] = useState(false);
 
   const initials = name
-    .split(' ')
-    .map(n => n[0])
-    .join('')
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
     .toUpperCase()
-    .slice(0, 2)
+    .slice(0, 2);
 
   return (
     <Link href={ROUTES.PROFILE(id)}>
@@ -41,13 +44,13 @@ const UserAvatar = ({
             onError={() => setImgError(true)}
           />
         ) : (
-          <AvatarFallback>
+          <AvatarFallback className={cn("text-white ", fallbackClassName)}>
             {initials}
           </AvatarFallback>
         )}
       </Avatar>
     </Link>
-  )
-}
+  );
+};
 
-export default UserAvatar
+export default UserAvatar;
