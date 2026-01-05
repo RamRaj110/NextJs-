@@ -87,7 +87,7 @@ const AuthForm = (props: AuthFormProps) => {
       
       router.push(ROUTES.HOME)
     } else {
-      toast.error(result?.message || "An error occurred");
+      toast.error(result?.error?.message || "An error occurred");
     }
   };
 
