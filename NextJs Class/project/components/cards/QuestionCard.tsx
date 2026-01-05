@@ -77,14 +77,12 @@ const QuestionCard = ({ question }: Props) => {
               />
             ) : (
               <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">
-                {author.name?.[0] ?? ""}
+                {author?.name?.[0]}
               </div>
             )}
-
             <p className="body-medium text-foreground group-hover:text-primary transition-colors">
               {author.name}
             </p>
-
             <span className="small-regular text-muted-foreground line-clamp-1 max-sm:hidden">
               • asked {getTimestamp(createdAt)}
             </span>

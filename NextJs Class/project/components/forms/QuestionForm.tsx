@@ -51,7 +51,7 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
     startTransition(async () => {
       if (isEdit && question) {
         const result = await editQuestion({
-          questionId: question?.id,
+          questionId: question.id!,
           ...values,
         });
 
@@ -60,7 +60,7 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
             description: "Your question has been updated successfully",
           });
           if (result.data) {
-            router.push(ROUTES.QUESTION(result.data.id));
+            router.push(ROUTES.QUESTION(result.data.id!));
           }
         } else {
           toast.error(`Error ${result.status}`, {

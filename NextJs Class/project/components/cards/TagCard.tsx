@@ -37,7 +37,7 @@ const TagCard = ({ id, name, questions, showCount, compact, children }: Props) =
   return (
     <Link 
       href={ROUTES.TAG(id)} 
-      className="shadow-sm dark:shadow-none card-wrapper flex w-full flex-col rounded-2xl border bg-card p-8 transition-all hover:shadow-lg hover:border-primary dark:bg-black dark:border-zinc-800 dark:hover:border-primary"
+      className="shadow-sm  dark:shadow-none card-wrapper flex w-full flex-col rounded-2xl border bg-card p-8 transition-all hover:shadow-lg hover:border-primary dark:bg-accent dark:border-zinc-800 dark:hover:border-primary"
     >
       <div className="flex w-full flex-col justify-between gap-4">
         <div className="flex items-center justify-between w-full">
