@@ -3,7 +3,7 @@ import Preview from "@/components/editor/Preview";
 import Metric from "@/components/Matric";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constant/route";
-import { getQuestion } from "@/lib/actions/question.action";
+import { getQuestion, increamentView } from "@/lib/actions/question.action";
 import { formatNumber } from "@/lib/utils";
 import {
   Clock,
@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import React from "react";
 
 const QuestionDetails = async ({
@@ -25,6 +26,10 @@ const QuestionDetails = async ({
   const { id } = await params;
 
   const { success, data: question } = await getQuestion({ questionId: [id] });
+  after(async()=>{
+    await increamentView({questionId: id})
+  })
+
 
   if (!success || !question) {
     redirect("/404");
@@ -105,13 +110,7 @@ const QuestionDetails = async ({
       {/* --- TAGS --- */}
       <div className="mt-8 flex flex-wrap gap-2">
         {question.tags.map((tag) => (
-          <Link
-            key={tag._id}
-            href={ROUTES.TAG(tag._id)}
-            className="shadow-none"
-          >
-            <TagCard id={tag._id} name={tag.name} compact={true} />
-          </Link>
+          <TagCard key={tag._id} id={tag._id} name={tag.name} compact={true} />
         ))}
       </div>
 

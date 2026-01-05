@@ -10,6 +10,7 @@ import {
   CreateQuestionParams,
   EditQuestionParams,
   getQuestionsParams,
+  IncreamentViewParams,
   ITagDoc,
 } from "@/Types/action";
 import action from "../handlers/action";
@@ -17,6 +18,7 @@ import {
   AskQuestionSchema,
   EditQuestionSchema,
   GetQuestionsSchema,
+  IncreamentViewSchema,
   PaginatedSearchParamsSchema,
 } from "../validation";
 import handleError from "../handlers/errors";
@@ -289,6 +291,41 @@ export async function getQuestions(
         questions: JSON.parse(JSON.stringify(questions)),
         isNext,
       },
+    };
+  } catch (error) {
+    return handleError(error as Error) as ErrorResponse;
+  }
+}
+
+export async function increamentView(
+  params: IncreamentViewParams
+): Promise<ActionResponse<{ views: number }>> {
+  const validationResult = await action({
+    params,
+    schema: IncreamentViewSchema,
+    authorize: false,
+  });
+
+  if (validationResult instanceof Error) {
+    console.error("[increamentView] Validation error:", validationResult);
+    return handleError(validationResult) as ErrorResponse;
+  }
+  const { questionId } = validationResult.params!;
+
+  try {
+    const question = await Questions.findByIdAndUpdate(
+      questionId,
+      { $inc: { views: 1 } },
+      { new: true }
+    );
+
+    if (!question) {
+      throw new Error("Question not found");
+    }
+    await question.save();
+    return {
+      success: true,
+      data: { views: question.views },
     };
   } catch (error) {
     return handleError(error as Error) as ErrorResponse;

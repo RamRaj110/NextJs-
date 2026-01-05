@@ -1,7 +1,13 @@
+
 import React from "react";
 import { compileMDX } from "next-mdx-remote/rsc";
-import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
+import { Code } from "bright";
+
+Code.theme = {
+  light: "github-light",
+  dark: "github-dark",
+};
 
 interface Props {
   content: string;
@@ -12,9 +18,7 @@ function sanitizeForMDX(content: string): string {
   const parts = content.split(codeBlockRegex);
   
   return parts.map((part, index) => {
-    if (index % 2 === 1) {
-      return part;
-    }
+    if (index % 2 === 1) return part;
     
     return part
       .replace(/\{/g, '\\{')
@@ -26,7 +30,9 @@ function sanitizeForMDX(content: string): string {
 }
 
 const Preview = async ({ content }: Props) => {
-  if (!content) return null;
+  if (!content?.trim()) {
+    return <p className="text-sm text-muted-foreground italic">No content provided</p>;
+  }
 
   try {
     const sanitizedContent = sanitizeForMDX(content);
@@ -38,8 +44,10 @@ const Preview = async ({ content }: Props) => {
         mdxOptions: {
           format: 'md',
           remarkPlugins: [remarkGfm],
-          rehypePlugins: [rehypeHighlight],
         },
+      },
+      components: {
+        code: Code,
       },
     });
 
@@ -54,9 +62,9 @@ const Preview = async ({ content }: Props) => {
     console.error("Content preview:", content.substring(0, 300));
 
     return (
-      <div className="p-4 border-2 border-red-500 rounded-lg">
-        <p className="text-red-600 font-bold">Error rendering content</p>
-        <pre className="text-xs bg-red-50 p-2 rounded overflow-auto mt-2">
+      <div className="p-4 border-2 border-red-500 rounded-lg bg-red-50/50">
+        <p className="text-red-600 font-bold text-sm">Error rendering content</p>
+        <pre className="mt-2 text-xs overflow-auto max-h-32 bg-red-100 p-2 rounded">
           {error instanceof Error ? error.message : String(error)}
         </pre>
       </div>
