@@ -27,7 +27,7 @@ const QuestionCard = ({ question }: Props) => {
   } = question;
 
   return (
-    <div className="card-wrapper rounded-[10px] bg-background p-9 shadow-sm border border-border/50 hover:shadow-md transition-shadow sm:px-11">
+    <div className="card-wrapper  rounded-[10px] dark:bg-gray-900  p-9 shadow-sm border border-border/50 hover:shadow-md transition-shadow sm:px-11">
       {/* --- Header & Title --- */}
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
         <div>
