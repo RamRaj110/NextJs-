@@ -26,10 +26,9 @@ const QuestionDetails = async ({
   const { id } = await params;
 
   const { success, data: question } = await getQuestion({ questionId: [id] });
-  after(async()=>{
-    await increamentView({questionId: id})
-  })
-
+  after(async () => {
+    await increamentView({ questionId: id });
+  });
 
   if (!success || !question) {
     redirect("/404");
@@ -45,8 +44,8 @@ const QuestionDetails = async ({
               href={ROUTES.PROFILE(question.author._id)}
               className="flex items-center justify-start gap-1"
             >
-              <div className="h-[22px] w-[22px] rounded-full bg-slate-300 flex items-center justify-center text-[10px] font-bold text-slate-600">
-                {question.author.name[0]}
+              <div className="h-[22px] w-[22px] rounded-full bg-slate-300 flex items-center justify-center text-[15px] font-bold text-slate-600">
+                {question.author.name[0].toUpperCase()}
               </div>
               <p className="paragraph-semibold text-foreground font-semibold">
                 {question.author.name}

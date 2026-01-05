@@ -23,7 +23,6 @@ const QuestionCard = ({ question }: Props) => {
     answers,
     createdAt,
     description,
-    image,
   } = question;
 
   return (
@@ -67,7 +66,7 @@ const QuestionCard = ({ question }: Props) => {
             href={ROUTES.PROFILE(author._id)}
             className="flex items-center gap-2 group"
           >
-            {author.image ? (
+            {author.image && author?.image !== "undefined" ? (
               <Image
                 src={author.image}
                 alt={author.name}
@@ -77,7 +76,7 @@ const QuestionCard = ({ question }: Props) => {
               />
             ) : (
               <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">
-                {author?.name?.[0]}
+                {author.name ? author.name[0].toUpperCase() : "?"}
               </div>
             )}
             <p className="body-medium text-foreground group-hover:text-primary transition-colors">
