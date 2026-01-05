@@ -128,7 +128,7 @@ const QuestionDetails = async ({
       {/* --- ANSWERS SECTION (Placeholder) --- */}
       <div className="mt-8">
         <h3 className="h3-bold text-xl font-bold">
-          <AnswerForm />
+          <AnswerForm questionId={question._id} />
         </h3>
         {/* You would render your <DataRenderer /> for answers here later */}
         <div className="mt-5 py-10 text-center text-muted-foreground border border-dashed border-border rounded-lg">
