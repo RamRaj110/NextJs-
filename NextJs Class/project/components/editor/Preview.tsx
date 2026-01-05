@@ -1,20 +1,43 @@
 import React from "react";
 import { compileMDX } from "next-mdx-remote/rsc";
 import rehypeHighlight from "rehype-highlight";
+import remarkGfm from "remark-gfm";
 
 interface Props {
   content: string;
+}
+
+function sanitizeForMDX(content: string): string {
+  const codeBlockRegex = /(```[\s\S]*?```|`[^`\n]+`)/g;
+  const parts = content.split(codeBlockRegex);
+  
+  return parts.map((part, index) => {
+    if (index % 2 === 1) {
+      return part;
+    }
+    
+    return part
+      .replace(/\{/g, '\\{')
+      .replace(/\}/g, '\\}')
+      .replace(/^import\s/gm, '\\import ')
+      .replace(/^export\s/gm, '\\export ')
+      .replace(/<(?![a-z]+;)/gi, '\\<');
+  }).join('');
 }
 
 const Preview = async ({ content }: Props) => {
   if (!content) return null;
 
   try {
+    const sanitizedContent = sanitizeForMDX(content);
+    
     const { content: MDXContent } = await compileMDX({
-      source: content,
+      source: sanitizedContent,
       options: {
         parseFrontmatter: false,
         mdxOptions: {
+          format: 'md',
+          remarkPlugins: [remarkGfm],
           rehypePlugins: [rehypeHighlight],
         },
       },

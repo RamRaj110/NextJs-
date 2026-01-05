@@ -24,7 +24,7 @@ const QuestionDetails = async ({
 }) => {
   const { id } = await params;
 
-  const { success, data: question } = await getQuestion({ questionId: id });
+  const { success, data: question } = await getQuestion({ questionId: [id] });
 
   if (!success || !question) {
     redirect("/404");

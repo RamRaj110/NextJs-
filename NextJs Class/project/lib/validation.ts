@@ -161,8 +161,7 @@ export const EditQuestionSchema = AskQuestionSchema.extend({
 
 export const GetQuestionsSchema = z.object({
   questionId: z
-    // .array(z.string().min(1))
-    .string()
+    .array(z.string().min(1))
     .min(1, { message: "At least one Question ID is required" }),
 });
 

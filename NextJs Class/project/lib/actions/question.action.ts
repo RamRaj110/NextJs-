@@ -206,8 +206,12 @@ export async function getQuestion(
     return handleError(validationResult) as ErrorResponse;
   }
   const { questionId } = validationResult.params!;
+
+  // Extract the first ID from the array (validation accepts array but we only use the first one)
+  const id = questionId[0];
+
   try {
-    const question = await Questions.findById(questionId)
+    const question = await Questions.findById(id)
       .populate("tags")
       .populate("author", "_id name image");
     if (!question) {
