@@ -1,5 +1,6 @@
 import TagCard from "@/components/cards/TagCard";
 import Preview from "@/components/editor/Preview";
+import AnswerForm from "@/components/forms/AnswerForm";
 import Metric from "@/components/Matric";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constant/route";
@@ -127,7 +128,7 @@ const QuestionDetails = async ({
       {/* --- ANSWERS SECTION (Placeholder) --- */}
       <div className="mt-8">
         <h3 className="h3-bold text-xl font-bold">
-          {question.answers} Answers
+          <AnswerForm />
         </h3>
         {/* You would render your <DataRenderer /> for answers here later */}
         <div className="mt-5 py-10 text-center text-muted-foreground border border-dashed border-border rounded-lg">
