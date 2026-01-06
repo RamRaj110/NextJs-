@@ -24,7 +24,6 @@ const QuestionCard = ({ question }: Props) => {
     createdAt,
     description,
   } = question;
-  console.log("answers", answers);
 
   return (
     <div className="card-wrapper  rounded-[10px] dark:bg-gray-900  p-9 shadow-sm border border-border/50 hover:shadow-md transition-shadow sm:px-11">
