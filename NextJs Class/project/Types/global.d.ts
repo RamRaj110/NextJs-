@@ -31,10 +31,10 @@ interface Question {
 interface ActionResponse<T = null> {
   success: boolean;
   data?: T;
-  error?:{
+  error?: {
     message: string;
     details?: Record<string, string[]>;
-  }
+  };
   status?: number;
 }
 
@@ -57,4 +57,14 @@ interface PaginatedSearchParams {
   query?: string;
   filter?: string;
   sort?: string;
+}
+
+interface Answers {
+  _id: string;
+  id?: string;
+  content: string;
+  author: Author;
+  question: Question;
+  upvotes: number;
+  createdAt: string;
 }

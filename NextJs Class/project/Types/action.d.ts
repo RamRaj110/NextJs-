@@ -45,6 +45,13 @@ type IAnswerDoc = {
   createdAt: Date;
   updatedAt: Date;
 };
+type PaginatedSearchParams = {
+  page?: number;
+  pageSize?: number;
+  query?: string;
+  filter?: string;
+  sort?: string;
+};
 
 export interface CreateQuestionParams {
   title: string;
@@ -70,4 +77,8 @@ interface IncreamentViewParams {
 interface CreateAnswerParams {
   questionId: string;
   content: string;
+}
+
+interface GetAnswerParams extends PaginatedSearchParams {
+  questionId: string;
 }

@@ -184,9 +184,13 @@ export const IncreamentViewSchema = z.object({
 export const AnswerSchema = z.object({
   content: z
     .string()
-    .min(100, { message: "Answer has to be at least 100 characters long." })
-})
+    .min(100, { message: "Answer has to be at least 100 characters long." }),
+});
 
-export const AnswerSeverSchema=AnswerSchema.extend({
+export const AnswerSeverSchema = AnswerSchema.extend({
   questionId: z.string().min(1, { message: "Question ID is required" }),
-})
+});
+
+export const GetAnswerSchema = PaginatedSearchParamsSchema.extend({
+  questionId: z.string().min(1, { message: "Question ID is required" }),
+});

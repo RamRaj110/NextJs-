@@ -4,6 +4,7 @@ import AnswerForm from "@/components/forms/AnswerForm";
 import Metric from "@/components/Matric";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constant/route";
+import { getAnswers } from "@/lib/actions/answer.action";
 import { getQuestion, increamentView } from "@/lib/actions/question.action";
 import { formatNumber } from "@/lib/utils";
 import {
@@ -34,6 +35,17 @@ const QuestionDetails = async ({
   if (!success || !question) {
     redirect("/404");
   }
+  const {
+    success: areAnswersSuccess,
+    data: answersResult,
+    error: answersError,
+  } = await getAnswers({
+    questionId: id,
+    page: 1,
+    pageSize: 10,
+    filter: "latest",
+  });
+  console.log("answersResult", answersResult);
 
   return (
     <>
