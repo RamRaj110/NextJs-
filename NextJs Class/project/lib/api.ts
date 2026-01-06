@@ -37,7 +37,7 @@ export const api = {
                 method:"DELETE"
             })
     },
-      accounts:{
+    accounts:{
         getAll: ()=> fetchHandler(`${API_BASE_URL}/accounts`),
         getById: (id: string) => fetchHandler(`${API_BASE_URL}/accounts/${id}`),
         getByProvider:(providerAccountId:string)=> 
@@ -59,5 +59,11 @@ export const api = {
             fetchHandler(`${API_BASE_URL}/accounts/${id}`,{
                 method:"DELETE"
             })
+    },
+    ai:{
+        getAnswer:(question:string,content:string):APIResponse<string>=> fetchHandler(`${API_BASE_URL}/ai/answers`,{
+            method:"POST",
+            body:JSON.stringify({question,content})
+        })       
     }
 }

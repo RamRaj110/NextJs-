@@ -13,7 +13,7 @@ function isError(error:unknown):  error is Error {
 
 export async function fetchHandler<T>(url:string,
     option:FetchOptions={}):Promise<ActionResponse<T>>{
-        const {timeout=5000,headers:customHeaders,...restOptions}=option;
+        const {timeout=20000,headers:customHeaders,...restOptions}=option;
         const controller=new AbortController();
         const id = setTimeout(() => controller.abort(), timeout);
 
