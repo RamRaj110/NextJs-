@@ -1,6 +1,6 @@
 'use server'
 
-import { CreateAnswerParams } from "@/Types/action";
+import { CreateAnswerParams, IAnswerDoc } from "@/Types/action";
 import { ActionResponse, ErrorResponse } from "@/Types/global";
 import { AnswerSeverSchema } from "../validation";
 import handleError from "../handlers/errors";

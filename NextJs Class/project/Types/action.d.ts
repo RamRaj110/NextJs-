@@ -37,6 +37,14 @@ type ITagDoc = {
   name: string;
   questionCount: number;
 };
+type IAnswerDoc = {
+  id: string;
+  content: string;
+  author: string;
+  question: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 export interface CreateQuestionParams {
   title: string;
