@@ -3,6 +3,7 @@ import DataRenderer from "@/components/DataRenderer";
 import { EMPTY_ANSWER } from "@/constant/state";
 import AnswerCard from "@/components/cards/AnswerCard";
 import { Answers, ActionResponse } from "@/Types/global";
+import { formatNumber } from "@/lib/utils";
 
 interface Props extends ActionResponse<Answers[]> {
   totalAnswers: number;
@@ -13,7 +14,8 @@ const AllAnswers = ({ data, success, error, totalAnswers }: Props) => {
     <div className="mt-11">
       <div className="flex items-center justify-between">
         <h3 className="h3-bold text-primary-500">
-          {totalAnswers} {totalAnswers === 1 ? "Answer" : "Answers"}
+          {formatNumber(totalAnswers)}{" "}
+          {totalAnswers === 1 ? "Answer" : "Answers"}
         </h3>
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-muted-foreground">

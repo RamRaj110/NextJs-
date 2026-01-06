@@ -24,6 +24,7 @@ const QuestionCard = ({ question }: Props) => {
     createdAt,
     description,
   } = question;
+  console.log("answers", answers);
 
   return (
     <div className="card-wrapper  rounded-[10px] dark:bg-gray-900  p-9 shadow-sm border border-border/50 hover:shadow-md transition-shadow sm:px-11">
@@ -108,7 +109,7 @@ const QuestionCard = ({ question }: Props) => {
           />
           <Metric
             icon={MessageCircle}
-            value={formatNumber(answers.toString().length || 0)}
+            value={formatNumber(answers)}
             title="Answers"
             textStyles="text-foreground small-medium"
           />

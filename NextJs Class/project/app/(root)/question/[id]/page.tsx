@@ -103,7 +103,7 @@ const QuestionDetails = async ({
           />
           <Metric
             icon={MessageCircle}
-            value={question.answers}
+            value={formatNumber(question.answers)}
             title="Answers"
             textStyles="small-medium text-primary"
           />
@@ -147,7 +147,7 @@ const QuestionDetails = async ({
             data={answersResult?.answers}
             success={areAnswersSuccess}
             error={answersError}
-            totalAnswers={answersResult?.totalAnswers || 0}
+            totalAnswers={question.answers}
           />
         </section>
       </div>
