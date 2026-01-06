@@ -4,9 +4,6 @@ import { getTimestamp } from "@/lib/utils";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 import ROUTES from "@/constant/route";
 import Preview from "../editor/Preview";
-// import { Separator } from "@mdxeditor/editor";
-
-// Define the Props based on your Answers Type
 interface Props {
   _id: string;
   author: {
@@ -14,7 +11,7 @@ interface Props {
     name: string;
     image?: string;
   };
-  content: string; // "answer" field is usually "content" in schemas, check your Types
+  content: string;
   createdAt: Date | string;
   upvotes: number;
   downvotes: number;
@@ -28,11 +25,6 @@ const AnswerCard = ({
   upvotes,
   downvotes,
 }: Props) => {
-  console.log(author);
-  console.log(content);
-  console.log(createdAt);
-  console.log(upvotes);
-  console.log(downvotes);
   return (
     <article key={_id} className="py-10 border-b border-border">
       {/* Anchor for linking directly to answer */}
@@ -40,7 +32,7 @@ const AnswerCard = ({
 
       {/* --- Header: Author Info --- */}
       <div className="mb-5 flex flex-col-reverse justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
-        <div className="flex items-center gap-2 flex-1 items-start sm:items-center">
+        <div className="flex items-center gap-2 flex-1 sm:items-center">
           {/* Avatar Component (or Image Fallback) */}
           <Link
             href={ROUTES.PROFILE(author?._id)}
