@@ -1,3 +1,4 @@
+import AllAnswers from "@/components/answers/AllAnswers";
 import TagCard from "@/components/cards/TagCard";
 import Preview from "@/components/editor/Preview";
 import AnswerForm from "@/components/forms/AnswerForm";
@@ -45,8 +46,6 @@ const QuestionDetails = async ({
     pageSize: 10,
     filter: "latest",
   });
-  console.log("answersResult", answersResult);
-
   return (
     <>
       <div className="flex-start w-full flex-col">
@@ -143,9 +142,14 @@ const QuestionDetails = async ({
           <AnswerForm questionId={question._id} />
         </h3>
         {/* You would render your <DataRenderer /> for answers here later */}
-        <div className="mt-5 py-10 text-center text-muted-foreground border border-dashed border-border rounded-lg">
-          Answers will be listed here...
-        </div>
+        <section className="mt-5 py-10 text-center text-muted-foreground border border-dashed border-border rounded-lg">
+          <AllAnswers
+            data={answersResult?.answers}
+            success={areAnswersSuccess}
+            error={answersError}
+            totalAnswers={answersResult?.totalAnswers || 0}
+          />
+        </section>
       </div>
     </>
   );

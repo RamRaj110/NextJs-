@@ -67,7 +67,7 @@ export async function createAnswer(
 export async function getAnswers(
   params: GetAnswerParams
 ): Promise<
-  ActionResponse<{ answers: Answers[]; isNext: boolean; totalAnswrs: number }>
+  ActionResponse<{ answers: Answers[]; isNext: boolean; totalAnswers: number }>
 > {
   const validationResult = await action({
     params,

@@ -66,5 +66,6 @@ interface Answers {
   author: Author;
   question: Question;
   upvotes: number;
+  downvotes: number;
   createdAt: string;
 }
