@@ -4,22 +4,17 @@ import Preview from "@/components/editor/Preview";
 import AnswerForm from "@/components/forms/AnswerForm";
 import Metric from "@/components/Matric";
 import { Button } from "@/components/ui/button";
+import Votes from "@/components/votes/Votes";
 import ROUTES from "@/constant/route";
 import { getAnswers } from "@/lib/actions/answer.action";
 import { getQuestion, increamentView } from "@/lib/actions/question.action";
+import { hasVoted } from "@/lib/actions/vote.action";
 import { formatNumber } from "@/lib/utils";
-import {
-  Clock,
-  Eye,
-  MessageCircle,
-  Share2,
-  Star,
-  ThumbsUp,
-} from "lucide-react";
+import { Clock, Eye, MessageCircle, Share2 } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { after } from "next/server";
-import React from "react";
+import React, { Suspense } from "react";
 
 const QuestionDetails = async ({
   params,
@@ -45,6 +40,11 @@ const QuestionDetails = async ({
     page: 1,
     pageSize: 10,
     filter: "latest",
+  });
+
+  const hasVotedPromise = hasVoted({
+    targetId: question._id,
+    targetType: "question",
   });
   return (
     <>
@@ -75,16 +75,15 @@ const QuestionDetails = async ({
           )}
 
           <div className="flex justify-end">
-            {/* Voting / Saving (Mock UI) */}
-            <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-muted-foreground hover:text-primary"
-              >
-                <Star size={18} className="mr-1" /> Save
-              </Button>
-            </div>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Votes
+                upvotes={question.upvotes}
+                downvotes={question.downvotes}
+                targetId={question._id}
+                targetType="question"
+                hasVotePromise={hasVotedPromise}
+              />
+            </Suspense>
           </div>
         </div>
 
