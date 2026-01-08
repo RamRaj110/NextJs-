@@ -3,10 +3,12 @@ import TagCard from "@/components/cards/TagCard";
 import Preview from "@/components/editor/Preview";
 import AnswerForm from "@/components/forms/AnswerForm";
 import Metric from "@/components/Matric";
+import SaveQuestion from "@/components/questions/SaveQuestion";
 import { Button } from "@/components/ui/button";
 import Votes from "@/components/votes/Votes";
 import ROUTES from "@/constant/route";
 import { getAnswers } from "@/lib/actions/answer.action";
+import { hasSavedQuestion } from "@/lib/actions/collection.action";
 import { getQuestion, increamentView } from "@/lib/actions/question.action";
 import { hasVoted } from "@/lib/actions/vote.action";
 import { formatNumber } from "@/lib/utils";
@@ -46,6 +48,9 @@ const QuestionDetails = async ({
     targetId: question._id,
     targetType: "question",
   });
+  const hasSavedPromise = hasSavedQuestion({
+    questionId: question._id,
+  });
   return (
     <>
       <div className="flex-start w-full flex-col">
@@ -82,6 +87,12 @@ const QuestionDetails = async ({
                 targetId={question._id}
                 targetType="question"
                 hasVotePromise={hasVotedPromise}
+              />
+            </Suspense>
+            <Suspense fallback={<div>Loading...</div>}>
+              <SaveQuestion
+                questionId={question._id}
+                hasSavedPromise={hasSavedPromise}
               />
             </Suspense>
           </div>
