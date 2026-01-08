@@ -38,8 +38,9 @@ const UserAvatar = ({
           <Image
             src={imageUrl}
             alt={name}
-            width={40}
-            height={40}
+            // width={40}
+            // height={40}
+            fill
             className="rounded-full object-cover border border-border"
             onError={() => setImgError(true)}
           />
