@@ -50,3 +50,12 @@ export const EMPTY_COLLECTIONS = {
     href: ROUTES.COLLECTION,
   },
 };
+
+export const EMPTY_USER = {
+  title: "No users found",
+  message: "It appears there are no users yet. Be the first to create one!",
+  button: {
+    text: "Home",
+    href: ROUTES.HOME,
+  },
+};

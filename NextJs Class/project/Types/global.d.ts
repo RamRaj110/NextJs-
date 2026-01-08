@@ -71,3 +71,15 @@ interface Answers {
   createdAt: string;
 }
 
+interface User {
+  _id: string;
+  id?: string;
+  name: string;
+  username: string;
+  email: string;
+  bio?: string;
+  location?: string;
+  portfolio?: string;
+  reputation?: number;
+  image?: string;
+}
