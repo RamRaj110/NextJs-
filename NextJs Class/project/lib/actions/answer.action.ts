@@ -115,7 +115,7 @@ export async function getAnswers(
       data: {
         answers: JSON.parse(JSON.stringify(answers)),
         isNext,
-        totalAnswrs,
+        totalAnswers: totalAnswrs,
       },
     };
   } catch (error) {
