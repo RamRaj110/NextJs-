@@ -1,18 +1,13 @@
 import UserCard from "@/components/cards/UserCard";
 import DataRenderer from "@/components/DataRenderer";
+import CommonFilter from "@/components/filter/CommonFilter";
 import LocalSearch from "@/components/search/LocalSearch";
-import { Button } from "@/components/ui/button"; // Optional: For filters
+import { UserFilters } from "@/constant/filters";
 import ROUTES from "@/constant/route";
 import { EMPTY_USER } from "@/constant/state";
 import { getUsers } from "@/lib/actions/user.action";
 import { RouteParams } from "@/Types/global";
 import Link from "next/link";
-
-const CommunityFilters = [
-  { name: "New Users", value: "new_users" },
-  { name: "Old Users", value: "old_users" },
-  { name: "Top Contributors", value: "top_contributors" },
-];
 
 async function Community({ searchParams }: RouteParams) {
   const { page, pageSize, query, filter } = await searchParams;
@@ -40,37 +35,13 @@ async function Community({ searchParams }: RouteParams) {
           placeholder="Search for amazing minds..."
           otherClasses="flex-1"
         />
-
-        {/* <div className="flex max-sm:w-full">
-          <Button
-            variant="outline"
-            className="hidden min-h-[56px] sm:flex bg-card"
-          >
-            Select Filter
-          </Button>
-        </div> */}
-      </div>
-
-      {/* --- Inline Filters (Mobile/Tablet Friendly) --- */}
-      <div className="mt-10 hidden flex-wrap gap-3 md:flex">
-        {CommunityFilters.map((item) => (
-          <Link
-            key={item.value}
-            href={`${ROUTES.COMMUNITY}?filter=${item.value}`}
-            scroll={false}
-          >
-            <Button
-              variant="secondary"
-              className={`px-6 py-3 capitalize shadow-none rounded-lg ${
-                filter === item.value
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-secondary-foreground"
-              }`}
-            >
-              {item.name}
-            </Button>
-          </Link>
-        ))}
+        <section>
+          <CommonFilter
+            filters={UserFilters}
+            otherClasses="max-sm:w-full sm:min-w-32"
+            containerClasses="max-sm:w-full"
+          />
+        </section>
       </div>
       <section className="mt-12">
         <DataRenderer

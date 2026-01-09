@@ -1,7 +1,9 @@
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
+import CommonFilter from "@/components/filter/CommonFilter";
 import HomeFilter from "@/components/filter/HomeFilter";
 import LocalSearch from "@/components/search/LocalSearch";
+import { CollectionFilters } from "@/constant/filters";
 import ROUTES from "@/constant/route";
 import { getSavedQuestions } from "@/lib/actions/collection.action";
 
@@ -18,22 +20,23 @@ const Collection = async ({ searchParams }: SearchParams) => {
     filter: filter || "",
   });
   const { collection } = data || {};
-  // console.log(data);
-  // console.log(collection?.[0]._id);
-  // console.log(collection);
   return (
     <>
       <section className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
         <h1 className="h1-bold text-3xl font-bold">Saved Questions</h1>
       </section>
-      <section className="mt-11">
+      <section className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearch
           route={ROUTES.COLLECTION}
           placeholder="Search questions..."
           otherClasses="flex-1"
         />
+        <CommonFilter
+          filters={CollectionFilters}
+          otherClasses="max-sm:w-full sm:min-w-32"
+          containerClasses="max-sm:w-full"
+        />
       </section>
-      <HomeFilter />
       <DataRenderer
         success={success}
         error={error}

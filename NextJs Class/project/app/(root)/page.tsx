@@ -1,8 +1,10 @@
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
+import CommonFilter from "@/components/filter/CommonFilter";
 import HomeFilter from "@/components/filter/HomeFilter";
 import LocalSearch from "@/components/search/LocalSearch";
 import { Button } from "@/components/ui/button";
+import { HomePageFilters } from "@/constant/filters";
 import ROUTES from "@/constant/route";
 import { getQuestions } from "@/lib/actions/question.action";
 import Link from "next/link";
@@ -23,7 +25,9 @@ const Home = async ({ searchParams }: SearchParams) => {
   return (
     <>
       <section className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
-        <h1 className="h1-bold text-3xl font-bold">All Questions</h1>
+        <h1 className="h1-bold text-3xl font-bold max-sm:text-2xl max-sm:text-center">
+          All Questions
+        </h1>
 
         <Link
           href={ROUTES.ASK_QUESTION}
@@ -35,11 +39,18 @@ const Home = async ({ searchParams }: SearchParams) => {
         </Link>
       </section>
 
-      <section className="mt-11">
+      <section className="mt-11 flex justify-between gap-4 max-sm:flex-col max-sm:items-center">
         <LocalSearch
           route="/"
           placeholder="Search questions..."
-          otherClasses="flex-1"
+          otherClasses="flex-1 max-sm:w-full text-center w-full"
+        />
+
+        <CommonFilter
+          filters={HomePageFilters}
+          otherClasses="max-sm:w-full sm:min-w-32"
+          containerClasses="max-sm:w-full"
+          // otherClasses="max-sm:w-full min-h-[56px]"
         />
       </section>
 

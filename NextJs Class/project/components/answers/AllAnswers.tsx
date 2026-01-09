@@ -4,6 +4,8 @@ import { EMPTY_ANSWER } from "@/constant/state";
 import AnswerCard from "@/components/cards/AnswerCard";
 import { Answers, ActionResponse } from "@/Types/global";
 import { formatNumber } from "@/lib/utils";
+import CommonFilter from "../filter/CommonFilter";
+import { AnswerFilters } from "@/constant/filters";
 
 interface Props extends ActionResponse<Answers[]> {
   totalAnswers: number;
@@ -18,19 +20,11 @@ const AllAnswers = ({ data, success, error, totalAnswers }: Props) => {
           {totalAnswers === 1 ? "Answer" : "Answers"}
         </h3>
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-muted-foreground">
-            Sort by:
-          </span>
-          {/* <Select defaultValue="recent">
-            <SelectTrigger className="w-[120px] h-8 bg-background">
-              <SelectValue placeholder="Sort" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="recent">Recent</SelectItem>
-              <SelectItem value="oldest">Oldest</SelectItem>
-              <SelectItem value="popular">Popular</SelectItem>
-            </SelectContent>
-          </Select> */}
+          <CommonFilter
+            filters={AnswerFilters}
+            otherClasses="max-sm:w-full sm:min-w-32"
+            containerClasses="max-sm:w-full"
+          />
         </div>
       </div>
 
