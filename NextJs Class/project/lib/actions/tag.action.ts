@@ -4,9 +4,9 @@ import {
   PaginatedSearchParams,
 } from "@/Types/global";
 import action from "../handlers/action";
-import { PaginatedSearchParamsSchema } from "../validation";
+import { GetTagQuestionsSchema, PaginatedSearchParamsSchema } from "../validation";
 import handleError from "../handlers/errors";
-import { Tag } from "@/database";
+import { Question, Tag } from "@/database";
 import type { GetTagQuestionsParams } from "@/Types/action";
 
 export const getTags = async (

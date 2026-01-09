@@ -9,13 +9,14 @@ import { Tag } from "lucide-react";
 import TagCard from "@/components/cards/TagCard";
 import CommonFilter from "@/components/filter/CommonFilter";
 import { TagFilters } from "@/constant/filters";
+import Pagination from "@/components/Pagination";
 
 const Tags = async ({ searchParams }: RouteParams) => {
   const { page, pageSize, search: query, filter } = await searchParams;
 
   const { success, data, error } = await getTags({
     page: Number(page) || 1,
-    pageSize: Number(pageSize) || 10,
+    pageSize: Number(pageSize) || 2,
     query,
     filter,
   });
@@ -55,6 +56,7 @@ const Tags = async ({ searchParams }: RouteParams) => {
           </div>
         )}
       />
+      <Pagination page={page} isNext={isNext || false} />
     </>
   );
 };

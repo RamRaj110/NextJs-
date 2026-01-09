@@ -38,7 +38,7 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
   } = await getAnswers({
     questionId: id,
     page: Number(page) || 1,
-    pageSize: Number(pageSize) || 10,
+    pageSize: Number(pageSize) || 2,
     filter,
   });
 
@@ -156,6 +156,8 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
         {/* You would render your <DataRenderer /> for answers here later */}
         <section className="mt-5 py-10 text-center text-muted-foreground border border-dashed border-border rounded-lg">
           <AllAnswers
+            page={Number(page) || 1}
+            isNext={answersResult?.isNext || false}
             data={answersResult?.answers}
             success={areAnswersSuccess}
             error={answersError}
