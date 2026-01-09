@@ -84,3 +84,9 @@ interface User {
   image?: string;
 }
 
+interface Collection {
+  _id: string;
+  id?: string;
+  author: string | Author;
+  question: Question;
+}
