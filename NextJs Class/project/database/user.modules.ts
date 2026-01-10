@@ -1,30 +1,30 @@
-import { model, Schema,models } from "mongoose";
+import { model, Schema, models } from "mongoose";
 
-export interface IUser{
-    _id:string;
-    name:string;
-    username:string;
-    email:string;
-    bio?:string;
-    image:string;
-    location?:string;
-    portfolio?:string;
-    reputation?:number;
+export interface IUser {
+  _id: string;
+  name: string;
+  username: string;
+  email: string;
+  bio?: string;
+  image: string;
+  location?: string;
+  portfolio?: string;
+  reputation?: number;
 }
 
-const UserSchema = new Schema<IUser>({
-    name: {type: String,required:true},
-    username:{type:String,required:true},
-    email:{type:String,required:true,unique:true},
-    bio:{type:String},
-    image:{type:String,required:true},
-    location:{type:String},
-    portfolio:{type:String},
-    reputation:{type:Number,default:0,}
+const UserSchema = new Schema<IUser>(
+  {
+    name: { type: String, required: true },
+    username: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    bio: { type: String },
+    image: { type: String, required: true },
+    location: { type: String },
+    portfolio: { type: String },
+    reputation: { type: Number, default: 0 },
+  },
+  { timestamps: true }
+);
 
-},
-{timestamps:true}
-)
-
-const User = models?.User || model<IUser>("User", UserSchema)
-export default User
+const User = models?.User || model<IUser>("User", UserSchema);
+export default User;
