@@ -68,6 +68,7 @@ export interface getQuestionsParams {
 
 interface GetTagQuestionsParams extends Omit<PaginatedSearchParams, "filter"> {
   tagId: string;
+  filter?: string;
 }
 
 interface IncreamentViewParams {
@@ -95,10 +96,9 @@ interface UpdateVoteParams extends CreateVoteParams {
 
 type HasVotedParams = Pick<CreateVoteParams, "targetId" | "targetType">;
 
-interface HasVotedResponse{
+interface HasVotedResponse {
   hasUpvoted: boolean;
   hasDownvoted: boolean;
-
 }
 
 interface CollectionBaseParams {

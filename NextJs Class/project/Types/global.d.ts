@@ -12,6 +12,7 @@ interface Tag {
   _id: string;
   id?: string;
   name: string;
+  questions?: number;
 }
 
 interface Question {

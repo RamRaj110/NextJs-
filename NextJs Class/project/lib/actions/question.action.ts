@@ -26,6 +26,7 @@ import monngoose from "mongoose";
 import Tag from "@/database/tag.modules";
 import TagQuestion from "@/database/tagquestion.modules";
 import Questions, { IQuestionDoc } from "@/database/question.modules";
+import dbConnect from "../mongoose";
 
 export async function createQuestion(
   params: CreateQuestionParams
@@ -326,6 +327,22 @@ export async function increamentView(
     return {
       success: true,
       data: { views: question.views },
+    };
+  } catch (error) {
+    return handleError(error as Error) as ErrorResponse;
+  }
+}
+
+export async function getHotQuestions(): Promise<ActionResponse<Question[]>> {
+  try {
+    await dbConnect();
+    const questions = await Questions.find()
+      .sort({ views: -1, upvotes: -1 })
+      .limit(10)
+      .limit(5);
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(questions)),
     };
   } catch (error) {
     return handleError(error as Error) as ErrorResponse;

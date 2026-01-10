@@ -4,14 +4,18 @@ import {
   PaginatedSearchParams,
 } from "@/Types/global";
 import action from "../handlers/action";
-import { GetTagQuestionsSchema, PaginatedSearchParamsSchema } from "../validation";
+import {
+  GetTagQuestionsSchema,
+  PaginatedSearchParamsSchema,
+} from "../validation";
 import handleError from "../handlers/errors";
-import { Question, Tag } from "@/database";
+import { Question, Tag, ITag, IQuestion } from "@/database";
 import type { GetTagQuestionsParams } from "@/Types/action";
+import dbConnect from "../mongoose";
 
 export const getTags = async (
   params: PaginatedSearchParams
-): Promise<ActionResponse<{ tags: Tag[]; isNext: boolean }>> => {
+): Promise<ActionResponse<{ tags: ITag[]; isNext: boolean }>> => {
   const validationResult = await action({
     params,
     schema: PaginatedSearchParamsSchema,
@@ -75,7 +79,9 @@ export const getTags = async (
 
 export const getTagQuestions = async (
   params: GetTagQuestionsParams
-): Promise<ActionResponse<{ questions: Question[]; isNext: boolean }>> => {
+): Promise<
+  ActionResponse<{ tag: ITag; questions: IQuestion[]; isNext: boolean }>
+> => {
   const validationResult = await action({
     params,
     schema: GetTagQuestionsSchema,
@@ -107,20 +113,40 @@ export const getTagQuestions = async (
     };
 
     if (query) {
-      filterQuery.title = { $regex: query, $options: 'i' }
+      filterQuery.title = { $regex: query, $options: "i" };
     }
     const totalTags = await Question.countDocuments(filterQuery);
 
     const tags = await Question.find(filterQuery)
-      .select('_id title views answers upvotes downvotes author createdAt')
-      .populate([{ path: 'author', select: "name image" }, { path: 'tags', select: "name" }])
+      .select("_id title views answers upvotes downvotes author createdAt")
+      .populate([
+        { path: "author", select: "name image" },
+        { path: "tags", select: "name" },
+      ])
       .skip(skip)
       .limit(limit);
 
     const isNext = totalTags > skip + tags.length;
     return {
       success: true,
-      data: { tag: JSON.parse(JSON.stringify(tag)), questions: JSON.parse(JSON.stringify(tags)), isNext },
+      data: {
+        tag: JSON.parse(JSON.stringify(tag)),
+        questions: JSON.parse(JSON.stringify(tags)),
+        isNext,
+      },
+    };
+  } catch (error) {
+    return handleError(error as Error) as ErrorResponse;
+  }
+};
+
+export const getTopTags = async (): Promise<ActionResponse<ITag[]>> => {
+  try {
+    await dbConnect();
+    const tags = await Tag.find().sort({ questionCount: -1 }).limit(5);
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(tags)),
     };
   } catch (error) {
     return handleError(error as Error) as ErrorResponse;
