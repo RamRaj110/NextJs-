@@ -2,16 +2,21 @@ import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 import ProfileLink from "@/components/user/ProfileLink";
 import UserAvatar from "@/components/UserAvtar";
-import { getUser } from "@/lib/actions/user.action";
+import { getUser, getUserQuestions } from "@/lib/actions/user.action";
 import { RouteParams } from "@/Types/global";
-import { CalendarDays, Link as LinkIcon, MapPin, Trophy } from "lucide-react";
+import { CalendarDays, Link as LinkIcon, MapPin } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import React from "react";
-import { Badge } from "@/components/ui/badge";
+import Stats from "@/components/user/Stats";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { EMPTY_QUESTION } from "@/constant/state";
+import QuestionCard from "@/components/cards/QuestionCard";
+import DataRenderer from "@/components/DataRenderer";
+import Pagination from "@/components/Pagination";
 
-const Profile = async ({ params }: RouteParams) => {
+const Profile = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;
+  const { page, pageSize } = await searchParams;
   if (!id) notFound();
 
   const session = await auth();
@@ -26,7 +31,19 @@ const Profile = async ({ params }: RouteParams) => {
       </div>
     );
 
-  const { user, totalQuestions, totalAnswers } = data;
+  const { user, totalQuestions, totalAnswers } = data!;
+  const {
+    success: userQuestionSuccess,
+    data: userQuestions,
+    error: userQuestionError,
+  } = await getUserQuestions({
+    userId: id,
+    page: Number(page) || 1,
+    pageSize: Number(pageSize) || 10,
+  });
+
+  const { questions, isNext, hasMoreQuestion } = userQuestions!;
+
   const {
     _id,
     name,
@@ -104,75 +121,42 @@ const Profile = async ({ params }: RouteParams) => {
           )}
         </div>
       </div>
-
-      {/* --- STATS SECTION --- */}
-      <div className="mt-10">
-        <h3 className="h3-bold text-xl font-bold mb-5">Stats</h3>
-
-        <div className="grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-4">
-          {/* Reputation Card */}
-          <div className="card-wrapper flex flex-wrap items-center justify-evenly gap-4 rounded-[10px] border border-border p-6 shadow-sm bg-card">
-            <div>
-              <p className="paragraph-semibold text-foreground font-bold">
-                {reputation}
-              </p>
-              <p className="body-medium text-muted-foreground">Reputation</p>
-            </div>
-            <div>
-              <Trophy className="text-yellow-500" size={40} />
-            </div>
-          </div>
-
-          {/* Questions Card */}
-          <div className="card-wrapper flex flex-wrap items-center justify-start gap-4 rounded-[10px] border border-border p-6 shadow-sm bg-card">
-            <div className="rounded-md bg-blue-500/10 p-3">
-              <span className="text-blue-500 font-bold text-xl">
-                {totalQuestions}
-              </span>
-            </div>
-            <div>
-              <p className="body-medium text-foreground font-semibold">
-                Questions
-              </p>
-              <p className="small-regular text-muted-foreground">asked</p>
-            </div>
-          </div>
-
-          {/* Answers Card */}
-          <div className="card-wrapper flex flex-wrap items-center justify-start gap-4 rounded-[10px] border border-border p-6 shadow-sm bg-card">
-            <div className="rounded-md bg-green-500/10 p-3">
-              <span className="text-green-500 font-bold text-xl">
-                {totalAnswers}
-              </span>
-            </div>
-            <div>
-              <p className="body-medium text-foreground font-semibold">
-                Answers
-              </p>
-              <p className="small-regular text-muted-foreground">submitted</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* --- CONTENT TABS (Placeholder for future) --- */}
+      <Stats
+        totalQuestions={totalQuestions}
+        totalAnswers={totalAnswers}
+        badges={{
+          GOLD: 0,
+          SILVER: 0,
+          BRONZE: 0,
+        }}
+      />
       <div className="mt-10 flex gap-4 border-b border-border pb-4">
-        <Badge className="bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer px-6 py-2">
-          Top Posts
-        </Badge>
-        <Badge
-          variant="outline"
-          className="text-muted-foreground hover:bg-secondary cursor-pointer px-6 py-2 border-border"
-        >
-          Answers
-        </Badge>
-      </div>
-
-      <div className="mt-5 w-full">
-        <div className="flex w-full flex-col items-center justify-center gap-4 py-10 bg-secondary/10 rounded-lg border border-dashed border-border text-center">
-          <p className="text-muted-foreground">
-            User hasn't posted any questions yet.
-          </p>
+        <Tabs defaultValue="top-post" className="flex-[2]">
+          <TabsList className="">
+            <TabsTrigger value="account">Top Posts</TabsTrigger>
+            <TabsTrigger value="password">Answers</TabsTrigger>
+          </TabsList>
+          <TabsContent value="account">
+            <DataRenderer
+              data={questions}
+              error={userQuestionError}
+              success={userQuestionSuccess}
+              empty={EMPTY_QUESTION}
+              render={(hotQuestion) => (
+                <div>
+                  {hotQuestion.map((question) => (
+                    <QuestionCard key={question._id} question={question} />
+                  ))}
+                </div>
+              )}
+            />
+            <Pagination page={page} isNext={hasMoreQuestion} />
+          </TabsContent>
+          <TabsContent value="password">List of Answers</TabsContent>
+        </Tabs>
+        <div>
+          <h3>Top Tags</h3>
+          <div>List of Tags</div>
         </div>
       </div>
     </section>
