@@ -1,12 +1,18 @@
 import React, { Suspense } from "react";
 import Link from "next/link";
-import { getTimestamp } from "@/lib/utils";
-import { ThumbsUp, ThumbsDown } from "lucide-react";
+import { cn, getTimestamp } from "@/lib/utils";
 import ROUTES from "@/constant/route";
 import Preview from "../editor/Preview";
 import Votes from "../votes/Votes";
 import { hasVoted } from "@/lib/actions/vote.action";
 import { Answers } from "@/Types/global";
+import EditDeleteAction from "../user/EditDeleteAction";
+
+interface Props extends Answers {
+  containerClass?: string;
+  showMore?: boolean;
+  showActionBtns?: boolean;
+}
 
 const AnswerCard = ({
   _id,
@@ -15,14 +21,22 @@ const AnswerCard = ({
   createdAt,
   upvotes,
   downvotes,
-}: Answers) => {
+  question,
+  containerClass,
+  showMore = false,
+  showActionBtns = false,
+}: Props) => {
   const hasVotedPromise = hasVoted({
     targetId: _id,
     targetType: "answer",
   });
   return (
-    <article key={_id} className="py-10 border-b border-border">
-      <span id={JSON.stringify(_id)} className="hidden" />
+    <article
+      key={_id}
+      className={cn("py-10 border-b border-border", containerClass)}
+    >
+      <span id={`answer-${_id}`} className="hidden" />
+      {showActionBtns && <EditDeleteAction id={_id} type="answer" />}
 
       <div className="mb-5 flex flex-col-reverse justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
         <div className="flex items-center gap-2 flex-1 sm:items-center">
@@ -52,6 +66,14 @@ const AnswerCard = ({
       </div>
       <div className="text-foreground text-sm leading-relaxed">
         <Preview content={content} />
+        {showMore && (
+          <Link
+            href={`/question/${question._id}#answer-${_id}`}
+            className="text-primary hover:underline mt-2 inline-block"
+          >
+            <p className="small-regular text-primary">Read More</p>
+          </Link>
+        )}
       </div>
       <div className="flex justify-end">
         <Suspense fallback={<div>Loading...</div>}>

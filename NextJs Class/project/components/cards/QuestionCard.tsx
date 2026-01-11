@@ -7,12 +7,14 @@ import { formatNumber, getTimestamp } from "@/lib/utils";
 import TagCard from "./TagCard";
 import Metric from "../Matric";
 import { Question } from "@/Types/global";
+import EditDeleteAction from "../user/EditDeleteAction";
 
 interface Props {
   question: Question;
+  showActionBtns?: boolean;
 }
 
-const QuestionCard = ({ question }: Props) => {
+const QuestionCard = ({ question, showActionBtns = false }: Props) => {
   const {
     _id,
     title,
@@ -33,6 +35,7 @@ const QuestionCard = ({ question }: Props) => {
           <span className="subtle-regular text-muted-foreground line-clamp-1 flex sm:hidden mb-2">
             {getTimestamp(createdAt)}
           </span>
+          {showActionBtns && <EditDeleteAction id={_id} type="question" />}
 
           <Link href={ROUTES.QUESTION ? ROUTES.QUESTION(_id) : "#"}>
             {/* INCREASED FONT SIZE HERE */}

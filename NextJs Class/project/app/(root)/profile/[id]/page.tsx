@@ -2,17 +2,24 @@ import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 import ProfileLink from "@/components/user/ProfileLink";
 import UserAvatar from "@/components/UserAvtar";
-import { getUser, getUserQuestions } from "@/lib/actions/user.action";
+import {
+  getUser,
+  getUserAnswers,
+  getUserQuestions,
+  getUserTags,
+} from "@/lib/actions/user.action";
 import { RouteParams } from "@/Types/global";
 import { CalendarDays, Link as LinkIcon, MapPin } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Stats from "@/components/user/Stats";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { EMPTY_QUESTION } from "@/constant/state";
+import { EMPTY_ANSWER, EMPTY_QUESTION, EMPTY_TAGS } from "@/constant/state";
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
 import Pagination from "@/components/Pagination";
+import AnswerCard from "@/components/cards/AnswerCard";
+import TagCard from "@/components/cards/TagCard";
 
 const Profile = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;
@@ -41,8 +48,26 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
     page: Number(page) || 1,
     pageSize: Number(pageSize) || 10,
   });
+  const {
+    success: userAnswerSuccess,
+    data: userAnswers,
+    error: userAnswerError,
+  } = await getUserAnswers({
+    userId: id,
+    page: Number(page) || 1,
+    pageSize: Number(pageSize) || 10,
+  });
+  const {
+    success: userTagSuccess,
+    data: userTags,
+    error: userTagError,
+  } = await getUserTags({
+    userId: id,
+  });
 
   const { questions, isNext, hasMoreQuestion } = userQuestions!;
+  const { answers, isNext: isNextAnswer, hasMoreAnswer } = userAnswers!;
+  const { tags } = userTags!;
 
   const {
     _id,
@@ -130,34 +155,111 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
           BRONZE: 0,
         }}
       />
-      <div className="mt-10 flex gap-4 border-b border-border pb-4">
-        <Tabs defaultValue="top-post" className="flex-[2]">
-          <TabsList className="">
-            <TabsTrigger value="account">Top Posts</TabsTrigger>
-            <TabsTrigger value="password">Answers</TabsTrigger>
-          </TabsList>
-          <TabsContent value="account">
+
+      {/* --- MAIN CONTENT AREA --- */}
+      <div className="mt-10 flex flex-col gap-8 lg:flex-row lg:gap-10">
+        {/* LEFT: Tabs for Posts & Answers */}
+        <div className="flex-1 lg:flex-2">
+          <Tabs defaultValue="top-posts" className="w-full">
+            <TabsList className="mb-6 grid w-full grid-cols-2 gap-2 bg-secondary/30 p-1 rounded-lg">
+              <TabsTrigger
+                value="top-posts"
+                className="rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm transition-all"
+              >
+                Top Posts
+              </TabsTrigger>
+              <TabsTrigger
+                value="answers"
+                className="rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm transition-all"
+              >
+                Answers
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="top-posts" className="mt-0">
+              <DataRenderer
+                data={questions}
+                error={userQuestionError}
+                success={userQuestionSuccess}
+                empty={EMPTY_QUESTION}
+                render={(hotQuestion) => (
+                  <div className="flex flex-col gap-4">
+                    {hotQuestion.map((question) => (
+                      <QuestionCard
+                        key={question._id}
+                        question={question}
+                        showActionBtns={
+                          session?.user?.id === String(question.author._id)
+                        }
+                      />
+                    ))}
+                  </div>
+                )}
+              />
+              <div className="mt-6">
+                <Pagination page={page} isNext={hasMoreQuestion} />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="answers" className="mt-0">
+              <DataRenderer
+                data={answers}
+                error={userAnswerError}
+                success={userAnswerSuccess}
+                empty={EMPTY_ANSWER}
+                render={(hotAnswer) => (
+                  <div className="flex flex-col gap-4">
+                    {hotAnswer.map((answer) => (
+                      <AnswerCard
+                        key={answer._id}
+                        {...answer}
+                        content={answer.content.slice(0, 100)}
+                        containerClass="rounded-lg bg-card border border-border/50 p-6 hover:shadow-md transition-shadow"
+                        showMore
+                        showActionBtns={
+                          session?.user?.id === String(answer.author._id)
+                        }
+                      />
+                    ))}
+                  </div>
+                )}
+              />
+              <div className="mt-6">
+                <Pagination page={page} isNext={hasMoreAnswer} />
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        {/* RIGHT: Top Tags Sidebar */}
+        <aside className="w-full lg:w-[280px] lg:min-w-[200px] shrink-0">
+          <div className="rounded-xl bg-card border border-border/50 p-6 shadow-sm">
+            <h3 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-primary"></span>
+              Top Tags
+            </h3>
             <DataRenderer
-              data={questions}
-              error={userQuestionError}
-              success={userQuestionSuccess}
-              empty={EMPTY_QUESTION}
-              render={(hotQuestion) => (
-                <div>
-                  {hotQuestion.map((question) => (
-                    <QuestionCard key={question._id} question={question} />
+              data={tags}
+              error={userTagError}
+              success={userTagSuccess}
+              empty={EMPTY_TAGS}
+              render={(hotTag) => (
+                <div className="flex flex-col gap-3">
+                  {hotTag.map((tag) => (
+                    <TagCard
+                      key={tag._id}
+                      id={tag._id}
+                      name={tag.name}
+                      questions={tag.questionCount}
+                      showCount
+                      compact
+                    />
                   ))}
                 </div>
               )}
             />
-            <Pagination page={page} isNext={hasMoreQuestion} />
-          </TabsContent>
-          <TabsContent value="password">List of Answers</TabsContent>
-        </Tabs>
-        <div>
-          <h3>Top Tags</h3>
-          <div>List of Tags</div>
-        </div>
+          </div>
+        </aside>
       </div>
     </section>
   );

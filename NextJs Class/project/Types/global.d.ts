@@ -66,10 +66,11 @@ interface Answers {
   id?: string;
   content: string;
   author: Author;
-  question: Question;
+  question: string;
   upvotes: number;
   downvotes: number;
   createdAt: string;
+  hasMoreAnswer: boolean;
 }
 
 interface User {
