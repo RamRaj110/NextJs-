@@ -15,6 +15,7 @@ const ROUTES = {
     QUESTION:(id: string) => `/question/${id}`,
     TAG: (id: string) => `/tags/${id}`,
     SIGN_IN_WITH_OAUTH:'/signin-with-oauth',
+    NOT_FOUND: '/not-found',
 }
 
 export default ROUTES;

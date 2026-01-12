@@ -1,4 +1,4 @@
-import { DEFAULT_EMPTY,EMPTY_QUESTION,  DEFAULT_ERROR } from "@/constant/state";
+import { DEFAULT_EMPTY, EMPTY_QUESTION, DEFAULT_ERROR } from "@/constant/state";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -59,17 +59,20 @@ const StateSkeleton = ({
         className="block object-contain dark:hidden"
       />
     </>
-    
+
     <h2 className="h2-bold text-foreground mt-8 text-xl font-bold">{title}</h2>
-    
+
     <p className="body-regular text-muted-foreground my-3.5 max-w-md text-center">
-        {message}
+      {message}
     </p>
 
     {button && (
       <Link href={button.href}>
-        <Button size="lg" className="mt-4 min-h-[46px] px-4 py-3 bg-primary text-primary-foreground hover:bg-primary/90">
-            {button.text}
+        <Button
+          size="lg"
+          className="mt-4 min-h-[46px] px-4 py-3 bg-primary text-primary-foreground hover:bg-primary/90"
+        >
+          {button.text}
         </Button>
       </Link>
     )}
@@ -83,13 +86,13 @@ const DataRenderer = <T,>({
   empty = EMPTY_QUESTION,
   render,
 }: Props<T>) => {
-    // 1. Handle Error State
+  // 1. Handle Error State
   if (!success) {
     return (
       <StateSkeleton
         image={{
-          light: "/error_light1.webp",
-          dark: "/error_dark.png",
+          light: "/somethingWrongImage.png",
+          dark: "/somethingWrongImage.png",
           alt: "Error state illustration",
         }}
         title={error?.message || DEFAULT_ERROR.title}
@@ -98,7 +101,7 @@ const DataRenderer = <T,>({
             ? JSON.stringify(error.details, null, 2)
             : DEFAULT_ERROR.message
         }
-        button={undefined} 
+        button={DEFAULT_ERROR.button}
       />
     );
   }
@@ -106,8 +109,8 @@ const DataRenderer = <T,>({
     return (
       <StateSkeleton
         image={{
-          light: "/error_light1.webp", 
-          dark: "/error_dark.png", 
+          light: "/empty_error_image.png",
+          dark: "/empty_error_image.png",
           alt: "Empty state illustration",
         }}
         title={empty.title}

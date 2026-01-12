@@ -28,10 +28,13 @@ const handleError = (error:unknown,
     responseType : ResponseType = "sever"
 )=>{
     if(error instanceof RequestError ){
-        logger.error(
-            {err: error},
-            `${responseType.toUpperCase()} Error: ${error.message}`
-        )
+        // Don't log "Unauthorized" at ERROR level - it's expected for protected routes
+        if (error.message !== "Unauthorized") {
+            logger.error(
+                {err: error},
+                `${responseType.toUpperCase()} Error: ${error.message}`
+            )
+        }
     }
     if(error instanceof RequestError){
         return formatResponse(

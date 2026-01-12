@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
 import CommonFilter from "@/components/filter/CommonFilter";
@@ -7,11 +8,16 @@ import LocalSearch from "@/components/search/LocalSearch";
 import { CollectionFilters } from "@/constant/filters";
 import ROUTES from "@/constant/route";
 import { getSavedQuestions } from "@/lib/actions/collection.action";
+import { redirect } from "next/navigation";
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
 }
 const Collection = async ({ searchParams }: SearchParams) => {
+  const session = await auth();
+  if (!session) {
+    return redirect(ROUTES.SIGNUP);
+  }
   const { page, pageSize, query, filter } = await searchParams;
 
   const { success, data, error } = await getSavedQuestions({
