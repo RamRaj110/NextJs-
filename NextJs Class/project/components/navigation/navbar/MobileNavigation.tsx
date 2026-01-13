@@ -1,98 +1,113 @@
-import React from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { Menu, LogIn, UserPlus, LogOut } from 'lucide-react'
-import { Button } from "@/components/ui/button"
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Menu, LogIn, UserPlus, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
-import ROUTES from "@/constant/route" 
-import NavLink from './NavLink'
-import { auth, signOut } from '@/auth'
-const MobileNavigation = async() => {
-  const session =await auth()
+} from "@/components/ui/sheet";
+import ROUTES from "@/constant/route";
+import NavLink from "./NavLink";
+import { auth, signOut } from "@/auth";
+const MobileNavigation = async () => {
+  const session = await auth();
   const userId = session?.user?.id;
 
   return (
     <Sheet>
       {/* Trigger Button */}
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="md:hidden text-muted-foreground hover:text-foreground">
-             <Menu className="h-6 w-6" />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="md:hidden transition-all hover:bg-secondary/80 active:scale-95"
+        >
+          <Menu className="h-6 w-6 text-foreground" />
+          <span className="sr-only">Toggle menu</span>
         </Button>
       </SheetTrigger>
 
       {/* Sheet Content - Opens from Left */}
-      <SheetContent side="left" className="w-[300px] border-r border-border bg-background/95 backdrop-blur-xl">
-        
+      <SheetContent
+        side="left"
+        className="w-[300px] border-r border-border bg-background/95 backdrop-blur-xl"
+      >
         {/* Header: Logo & Brand Name */}
-        <SheetHeader className=" text-left">
+        <SheetHeader className="text-left py-4">
           <SheetTitle asChild>
-            <Link href="/" className="flex items-center gap-3">
-              <Image 
-                className="rounded-full object-cover border border-border"
-                src="/logo.png"
-                alt="Logo"
-                width={40}
-                height={40}
-              />
-              <span className="text-xl font-bold text-foreground">
-                code<span className="bg-gradient-to-r from-primary to-violet-500 bg-clip-text text-transparent">Love</span>
+            <Link
+              href="/"
+              className="group flex items-center gap-3 transition-transform hover:scale-[1.02]"
+            >
+              <div className="relative h-10 w-10 overflow-hidden rounded-full border border-border shadow-sm">
+                <Image
+                  className="object-cover transition-transform group-hover:scale-110"
+                  src="/logo.png"
+                  alt="Logo"
+                  fill
+                />
+              </div>
+              <span className="font-heading text-xl font-bold tracking-tight text-foreground">
+                code
+                <span className="bg-linear-to-r from-primary to-indigo-500 bg-clip-text text-transparent">
+                  Love
+                </span>
               </span>
             </Link>
           </SheetTitle>
         </SheetHeader>
         <div className="">
-             <NavLink isMobileNav/>
+          <NavLink isMobileNav />
         </div>
 
         {/* Authentication Buttons */}
-        <div className="flex flex-col gap-4 p-1 ">
-          {
-            userId ? (
-             <form 
-        action={async ()=>{
-          "use server"
-          await signOut()
-        }}
-        >
-            <Button type='submit' variant="outline" className="w-full h-11 bg-transparent border-border hover:bg-secondary gap-2
-            md:justify-center lg:justify-start px-0 lg:px-4">
-            <LogOut size={20} className="text-muted-foreground" />
-            <span className="font-medium max-lg:hidden">Logout</span>
-          </Button>
-        </form>
-            ):(
-              <>
-   {/* Login Button */}
-            <Link href={ROUTES.SIGNIN || "/signin"} className="w-full">
-                <Button variant="outline" className="w-full justify-start gap-2 h-11 bg-transparent border-border hover:bg-secondary">
-                    <LogIn size={18} className="text-muted-foreground" />
-                    <span className="font-medium">Log In</span>
+        <div className="mt-8 flex flex-col gap-3">
+          {userId ? (
+            <form
+              action={async () => {
+                "use server";
+                await signOut();
+              }}
+            >
+              <Button
+                type="submit"
+                variant="outline"
+                className="h-11 w-full justify-start gap-3 rounded-xl border-border/50 bg-transparent px-4 font-body font-medium transition-all hover:bg-destructive/10 hover:text-destructive active:scale-[0.98]"
+              >
+                <LogOut size={20} />
+                <span>Logout</span>
+              </Button>
+            </form>
+          ) : (
+            <>
+              {/* Login Button */}
+              <Link href={ROUTES.SIGNIN || "/signin"}>
+                <Button
+                  variant="outline"
+                  className="h-11 w-full justify-start gap-3 rounded-xl border-border/50 bg-transparent px-4 font-body font-medium transition-all hover:bg-secondary active:scale-[0.98]"
+                >
+                  <LogIn size={20} className="text-muted-foreground" />
+                  <span>Log In</span>
                 </Button>
-            </Link>
+              </Link>
 
-            {/* Sign Up Button */}
-            <Link href={ROUTES.SIGNUP || "/signup"} className="w-full">
-                <Button className="w-full justify-start gap-2 h-11 bg-primary text-primary-foreground hover:bg-primary/90 shadow-md">
-                    <UserPlus size={18} />
-                    <span className="font-bold">Sign Up</span>
+              {/* Sign Up Button */}
+              <Link href={ROUTES.SIGNUP || "/signup"}>
+                <Button className="h-11 w-full justify-start gap-3 rounded-xl bg-primary px-4 font-heading font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98]">
+                  <UserPlus size={20} />
+                  <span>Sign Up</span>
                 </Button>
-            </Link>
+              </Link>
             </>
-            )
-          }
-            
-         
-
+          )}
         </div>
       </SheetContent>
     </Sheet>
-  )
-}
+  );
+};
 
-export default MobileNavigation
+export default MobileNavigation;

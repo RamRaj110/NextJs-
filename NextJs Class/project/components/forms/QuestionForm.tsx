@@ -60,7 +60,7 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
             description: "Your question has been updated successfully",
           });
           if (result.data) {
-            router.push(ROUTES.QUESTION(result.data.id!));
+            router.push(ROUTES.QUESTION(result.data._id!));
           }
         } else {
           toast.error(`Error ${result.status}`, {
@@ -69,19 +69,19 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
         }
         return;
       }
-    const result = await createQuestion(values);
-    if (result.success) {
-      toast.success("Question Created successfully", {
-        description: "Your question has been created successfully",
-      });
-      if (result.data) {
-        router.push(ROUTES.QUESTION(result.data.id));
+      const result = await createQuestion(values);
+      if (result.success) {
+        toast.success("Question Created successfully", {
+          description: "Your question has been created successfully",
+        });
+        if (result.data) {
+          router.push(ROUTES.QUESTION(result.data._id));
+        }
+      } else {
+        toast.error(`Error ${result.status}`, {
+          description: result.error?.message || "Something went wrong",
+        });
       }
-    } else {
-      toast.error(`Error ${result.status}`, {
-        description: result.error?.message || "Something went wrong",
-      });
-    }
     });
   };
 
@@ -132,7 +132,7 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleCreateQuestion)}
-        className="flex w-full flex-col gap-10"
+        className="flex w-full flex-col gap-8"
       >
         {/* Title Field */}
         <FormField
@@ -140,21 +140,21 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
           name="title"
           render={({ field }) => (
             <FormItem className="flex w-full flex-col">
-              <FormLabel className="paragraph-semibold text-foreground">
+              <FormLabel className="text-base font-bold text-foreground">
                 Question Title <span className="text-primary">*</span>
               </FormLabel>
               <FormControl>
                 <Input
-                  className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
-                  placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
+                  className="min-h-[56px] rounded-xl border-border/50 bg-secondary/20 text-base transition-[border-color,ring-color,background-color] duration-300 placeholder:text-muted-foreground/60 focus-visible:border-primary/50 focus-visible:ring-primary/20"
+                  placeholder="e.g. How do I center a div in CSS?"
                   {...field}
                 />
               </FormControl>
-              <FormDescription className="body-regular mt-2.5 text-muted-foreground">
+              <FormDescription className="text-sm text-muted-foreground mt-2">
                 Be specific and imagine you&apos;re asking a question to another
                 person.
               </FormDescription>
-              <FormMessage className="text-red-500" />
+              <FormMessage className="text-destructive font-medium" />
             </FormItem>
           )}
         />
@@ -165,18 +165,19 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
           name="content"
           render={({ field }) => (
             <FormItem className="flex w-full flex-col gap-3">
-              <FormLabel className="paragraph-semibold text-foreground">
-                Detailed Explanation of your problem{" "}
-                <span className="text-primary">*</span>
+              <FormLabel className="text-base font-bold text-foreground">
+                Detailed Explanation <span className="text-primary">*</span>
               </FormLabel>
               <FormControl>
-                <Editor value={field.value} fieldChange={field.onChange} />
+                <div className="rounded-xl border border-border/50 bg-secondary/10 overflow-hidden transition-[border-color] duration-300 focus-within:border-primary/50">
+                  <Editor value={field.value} fieldChange={field.onChange} />
+                </div>
               </FormControl>
-              <FormDescription className="body-regular mt-2.5 text-muted-foreground">
+              <FormDescription className="text-sm text-muted-foreground mt-2">
                 Include all the information someone would need to answer your
-                question.
+                question. Use markdown for formatting.
               </FormDescription>
-              <FormMessage className="text-red-500" />
+              <FormMessage className="text-destructive font-medium" />
             </FormItem>
           )}
         />
@@ -187,23 +188,23 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
           name="tags"
           render={({ field }) => (
             <FormItem className="flex w-full flex-col gap-3">
-              <FormLabel className="paragraph-semibold text-foreground">
+              <FormLabel className="text-base font-bold text-foreground">
                 Tags <span className="text-primary">*</span>
               </FormLabel>
               <FormControl>
-                <div>
+                <div className="space-y-4">
                   <Input
-                    className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
+                    className="min-h-[56px] rounded-xl border-border/50 bg-secondary/20 text-base transition-[border-color,ring-color,background-color] duration-300 placeholder:text-muted-foreground/60 focus-visible:border-primary/50 focus-visible:ring-primary/20"
                     placeholder="Add tags... (Press Enter to add)"
                     onKeyDown={(e) => handleInputKeyDown(e, field)}
                   />
 
                   {field.value.length > 0 && (
-                    <div className="flex justify-start mt-2.5 gap-2.5 flex-wrap">
+                    <div className="flex flex-wrap gap-2">
                       {field.value.map((tag: string) => (
                         <TagCard
                           key={tag}
-                          id={0}
+                          id="0"
                           name={tag}
                           compact
                           showCount={false}
@@ -211,7 +212,7 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
                           <button
                             type="button"
                             onClick={() => handleTagRemove(tag, field)}
-                            className="ml-2 focus:outline-none hover:text-destructive transition-colors"
+                            className="ml-2 focus:outline-none hover:text-destructive transition-colors duration-300"
                             aria-label={`Remove ${tag} tag`}
                           >
                             <X size={12} />
@@ -222,22 +223,38 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
                   )}
                 </div>
               </FormControl>
-              <FormDescription className="body-regular mt-2.5 text-muted-foreground">
-                Add up to 3 tags to describe what your question is about. Start
-                typing to see suggestions.
+              <FormDescription className="text-sm text-muted-foreground mt-2">
+                Add up to 3 tags to describe what your question is about. Press
+                Enter after typing each tag.
               </FormDescription>
-              <FormMessage className="text-red-500" />
+              <FormMessage className="text-destructive font-medium" />
             </FormItem>
           )}
         />
 
-        <Button
-          type="submit"
-          className="primary-gradient w-fit text-light-900 font-bold"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? "Posting..." : isEdit ? "Update Question" : "Ask a Question"}
-        </Button>
+        <div className="flex items-center gap-4 pt-4 border-t border-border/50">
+          <Button
+            type="submit"
+            className="min-h-[48px] rounded-xl bg-primary px-8 font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-[background-color,box-shadow,transform] duration-300 hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30 disabled:opacity-50"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <span className="flex items-center gap-2">
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
+                {isEdit ? "Updating..." : "Posting..."}
+              </span>
+            ) : isEdit ? (
+              "Update Question"
+            ) : (
+              "Ask a Question"
+            )}
+          </Button>
+          {isEdit && (
+            <p className="text-sm text-muted-foreground">
+              Your question will be updated immediately
+            </p>
+          )}
+        </div>
       </form>
     </Form>
   );

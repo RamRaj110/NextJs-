@@ -20,7 +20,7 @@ interface Question {
   id?: string;
   title: string;
   content: string;
-  description: string;
+  description?: string;
   tags: Tag[];
   author: Author;
   upvotes: number;
@@ -80,10 +80,11 @@ interface User {
   username: string;
   email: string;
   bio?: string;
+  image?: string;
   location?: string;
   portfolio?: string;
   reputation?: number;
-  image?: string;
+  createdAt?: Date | string;
 }
 
 interface Collection {
@@ -91,20 +92,6 @@ interface Collection {
   id?: string;
   author: string | Author;
   question: Question;
-}
-
-interface User {
-  _id: string;
-  id?: string;
-  name: string;
-  username: string;
-  email: string;
-  image?: string;
-  bio?: string;
-  location?: string;
-  portfolio?: string;
-  reputation?: number;
-  createdAt: Date;
 }
 
 interface BadgeCounts {

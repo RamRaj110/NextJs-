@@ -10,6 +10,8 @@ export interface IUser {
   location?: string;
   portfolio?: string;
   reputation?: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const UserSchema = new Schema<IUser>(

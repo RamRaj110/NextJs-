@@ -24,52 +24,78 @@ const Home = async ({ searchParams }: SearchParams) => {
   });
   const { questions, isNext } = data || {};
   return (
-    <>
-      <section className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
-        <h1 className="h1-bold text-3xl font-bold max-sm:text-2xl max-sm:text-center">
-          All Questions
-        </h1>
+    <div className="flex flex-col gap-10">
+      {/* --- HERO SECTION --- */}
+      <section className="relative overflow-hidden rounded-3xl bg-linear-to-br from-primary/5 via-background to-background p-8 border border-border/40 sm:p-12">
+        <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-indigo-500/10 blur-3xl" />
 
-        <Link
-          href={ROUTES.ASK_QUESTION}
-          className="flex justify-end max-sm:w-full"
-        >
-          <Button className="primary-gradient min-h-[46px] px-4 py-3 !text-light-900 w-full sm:w-auto">
-            Ask a Question
-          </Button>
-        </Link>
-      </section>
-
-      <section className="mt-11 flex justify-between gap-4 max-sm:flex-col max-sm:items-center">
-        <LocalSearch
-          route="/"
-          placeholder="Search questions..."
-          otherClasses="flex-1 max-sm:w-full text-center w-full"
-        />
-
-        <CommonFilter
-          filters={HomePageFilters}
-          otherClasses="max-sm:w-full sm:min-w-32"
-          containerClasses="max-sm:w-full"
-          // otherClasses="max-sm:w-full min-h-[56px]"
-        />
-      </section>
-
-      <HomeFilter />
-      <DataRenderer
-        success={success}
-        error={error}
-        data={questions}
-        render={(quesions) => (
-          <div className="mt-10 flex w-full flex-col gap-6">
-            {questions?.map((question, index) => (
-              <QuestionCard key={index} question={question} />
-            ))}
+        <div className="relative z-10 flex flex-col items-center justify-between gap-8 md:flex-row">
+          <div className="flex-1 space-y-4 text-center md:text-left">
+            <h1 className="h1-bold text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+              All Questions
+            </h1>
+            <p className="body-regular text-muted-foreground max-w-lg text-lg leading-relaxed">
+              Explore the latest technical questions and join a community of
+              passionate developers sharing knowledge.
+            </p>
           </div>
-        )}
-      />
-      <Pagination page={page} isNext={isNext || false} />
-    </>
+
+          <Link
+            href={ROUTES.ASK_QUESTION}
+            className="flex shrink-0 transform justify-center transition-all hover:scale-105 active:scale-95"
+          >
+            <Button className="primary-gradient h-14 rounded-2xl px-8 text-lg font-bold shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30">
+              Ask a Question
+            </Button>
+          </Link>
+        </div>
+      </section>
+
+      {/* --- SEARCH & FILTERS --- */}
+      <section className="flex flex-col gap-6">
+        <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
+          <div className="flex-1">
+            <LocalSearch
+              route="/"
+              placeholder="Search for questions..."
+              otherClasses="h-14 bg-card border-border/50 shadow-sm focus-within:border-primary/50 focus-within:ring-4 focus-within:ring-primary/10"
+            />
+          </div>
+
+          <CommonFilter
+            filters={HomePageFilters}
+            otherClasses="h-14 sm:min-w-[170px]"
+            containerClasses="flex md:hidden"
+          />
+        </div>
+
+        <HomeFilter />
+      </section>
+
+      {/* --- QUESTIONS LIST --- */}
+      <div className="flex w-full flex-col gap-6">
+        <DataRenderer
+          success={success}
+          error={error}
+          data={questions}
+          render={(questions) => (
+            <div className="grid grid-cols-1 gap-6">
+              {questions?.map((question, index) => (
+                <QuestionCard key={index} question={question} />
+              ))}
+            </div>
+          )}
+        />
+      </div>
+
+      {/* --- PAGINATION --- */}
+      {questions && questions.length > 0 && (
+        <div className="mt-4 flex justify-center border-t border-border/50 pt-10">
+          <Pagination page={page} isNext={isNext || false} />
+        </div>
+      )}
+    </div>
   );
 };
 

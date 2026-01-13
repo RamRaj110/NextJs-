@@ -7,9 +7,20 @@ import {
   GetUserTagsParams,
   PaginatedSearchParams,
 } from "@/Types/action";
-import { ActionResponse, Answers, ErrorResponse } from "@/Types/global";
+import {
+  ActionResponse,
+  Answers,
+  ErrorResponse,
+  Question as GlobalQuestion,
+} from "@/Types/global";
 import action from "../handlers/action";
-import { GetUserSchema, GetUserTagsSchema, PaginatedSearchParamsSchema } from "../validation";
+import {
+  GetUserAnswersSchema,
+  GetUserQuestionsSchema,
+  GetUserSchema,
+  GetUserTagsSchema,
+  PaginatedSearchParamsSchema,
+} from "../validation";
 import handleError from "../handlers/errors";
 import { QueryFilter, Types, PipelineStage } from "mongoose";
 import { Answer, IQuestion, Question, User } from "@/database";
@@ -107,13 +118,13 @@ export async function getUser(params: GetUserParams): Promise<
 
 export async function getUserQuestions(params: GetUserQuestionsParams): Promise<
   ActionResponse<{
-    questions: IQuestion[];
+    questions: GlobalQuestion[];
     isNext: boolean;
   }>
 > {
   const validationResult = await action({
     params,
-    schema: GetUserSchema,
+    schema: GetUserQuestionsSchema,
   });
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
@@ -150,7 +161,7 @@ export async function getUserAnswers(params: GetUserAnswersParams): Promise<
 > {
   const validationResult = await action({
     params,
-    schema: GetUserSchema,
+    schema: GetUserAnswersSchema,
   });
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
@@ -181,8 +192,8 @@ export async function getUserAnswers(params: GetUserAnswersParams): Promise<
 
 export async function getUserTags(params: GetUserTagsParams): Promise<
   ActionResponse<{
-    tags: {_id:string, name:string, questionCount:number}[]}
-  >
+    tags: { _id: string; name: string; questionCount: number }[];
+  }>
 > {
   const validationResult = await action({
     params,
@@ -233,7 +244,7 @@ export async function getUserTags(params: GetUserTagsParams): Promise<
           questionCount: 1,
         },
       },
-    ]
+    ];
     const tags = await Question.aggregate(pipeline);
     return {
       success: true,

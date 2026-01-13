@@ -23,41 +23,73 @@ const Tags = async ({ searchParams }: RouteParams) => {
   const { tags, isNext } = data!;
 
   return (
-    <>
-      <h1 className="text-2xl font-bold mb-4">Tags</h1>
-      <section className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
-        <LocalSearch
-          route={ROUTES.TAGS}
-          placeholder="Search tags..."
-          otherClasses="text-muted-foreground width-full"
-        />
-        <CommonFilter
-          filters={TagFilters}
-          otherClasses="max-sm:w-full sm:min-w-32"
-          containerClasses="max-sm:w-full"
-        />
+    <div className="flex flex-col gap-10">
+      {/* --- HERO SECTION --- */}
+      <section className="relative overflow-hidden rounded-3xl bg-linear-to-br from-primary/5 via-background to-background p-8 border border-border/40 sm:p-12">
+        <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-indigo-500/10 blur-3xl" />
+
+        <div className="relative z-10 flex flex-col items-center justify-between gap-8 md:flex-row">
+          <div className="flex-1 space-y-4 text-center md:text-left">
+            <h1 className="h1-bold text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+              Tags
+            </h1>
+            <p className="body-regular text-muted-foreground max-w-lg text-lg leading-relaxed">
+              Browse questions by tags. Explore specific topics and find the
+              best answers in your area of interest.
+            </p>
+          </div>
+        </div>
       </section>
-      <DataRenderer
-        success={success}
-        data={tags}
-        error={error}
-        empty={EMPTY_TAGS}
-        render={(tags) => (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mt-6">
-            {tags.map((tag) => (
-              <TagCard
-                key={tag._id}
-                id={tag._id}
-                {...tag}
-                questions={tag.questions}
-                showCount
-              />
-            ))}
+
+      {/* --- SEARCH & FILTERS --- */}
+      <section className="flex flex-col gap-6">
+        <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
+          <div className="flex-1">
+            <LocalSearch
+              route={ROUTES.TAGS}
+              placeholder="Search for tags..."
+              otherClasses="h-14 bg-card border-border/50 shadow-sm focus-within:border-primary/50 focus-within:ring-4 focus-within:ring-primary/10"
+            />
+          </div>
+
+          <CommonFilter
+            filters={TagFilters}
+            otherClasses="h-14 sm:min-w-[170px]"
+            containerClasses="flex"
+          />
+        </div>
+      </section>
+
+      {/* --- TAGS GRID --- */}
+      <section>
+        <DataRenderer
+          success={success}
+          data={tags}
+          error={error}
+          empty={EMPTY_TAGS}
+          render={(tags) => (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {tags.map((tag) => (
+                <TagCard
+                  key={tag._id}
+                  id={tag._id!}
+                  name={tag.name}
+                  questions={tag.questionCount}
+                  showCount
+                />
+              ))}
+            </div>
+          )}
+        />
+
+        {tags && tags.length > 0 && (
+          <div className="mt-10 flex justify-center border-t border-border/50 pt-10">
+            <Pagination page={page} isNext={isNext || false} />
           </div>
         )}
-      />
-      <Pagination page={page} isNext={isNext || false} />
-    </>
+      </section>
+    </div>
   );
 };
 

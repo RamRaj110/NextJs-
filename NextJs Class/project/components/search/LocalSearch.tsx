@@ -23,41 +23,44 @@ function LocalSearch({ route, placeholder, otherClasses }: Props) {
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
+      const currentSearchParams = new URLSearchParams(searchParam.toString());
+      const currentSearch = currentSearchParams.get("search") || "";
+
       if (query) {
-        const newUrl = formUrlQuery({
-          params: searchParamsString,
-          key: "search",
-          value: query,
-        });
-        router.push(newUrl, { scroll: false });
-      } else if (pathname === route) {
-        const newUrl = removeKeyformUrlQuery({
-          params: searchParamsString,
-          keyToRemove: ["search"],
-        });
-        router.push(newUrl, { scroll: false });
+        if (query !== currentSearch) {
+          const newUrl = formUrlQuery({
+            params: searchParam.toString(),
+            key: "search",
+            value: query,
+          });
+          router.push(newUrl, { scroll: false });
+        }
+      } else {
+        if (currentSearch) {
+          const newUrl = removeKeyformUrlQuery({
+            params: searchParam.toString(),
+            keyToRemove: ["search"],
+          });
+          router.push(newUrl, { scroll: false });
+        }
       }
     }, 500);
 
     return () => clearTimeout(delayDebounce);
-  }, [query, pathname, route, router, searchParamsString]);
+  }, [query, pathname, route, router, searchParam]);
 
   return (
-    <div className="relative ">
-      <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-        <Search
-          className={`h-5 w-5 text-center text-muted-foreground ${otherClasses}`}
-        />
+    <div className={`group relative w-full ${otherClasses}`}>
+      <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
+        <Search className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors duration-300" />
       </div>
-      <div>
-        <Input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          type="text"
-          className="block  rounded-full p-2.5 pl-10 text-sm text-foreground border-none placeholder:text-muted-foreground transition-all duration-300"
-          placeholder={placeholder || "Search..."}
-        />
-      </div>
+      <Input
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        type="text"
+        className="h-full w-full rounded-2xl border border-border/50 bg-secondary/20 pl-12 text-base transition-[border-color,ring-color,background-color] duration-300 placeholder:text-muted-foreground/60 focus-visible:ring-primary/20 focus-visible:border-primary/50"
+        placeholder={placeholder || "Search..."}
+      />
     </div>
   );
 }

@@ -9,6 +9,8 @@ export interface IQuestion {
   downvotes: number;
   answers: number;
   author: Types.ObjectId;
+  _id: string;
+  createdAt: Date;
 }
 export interface IQuestionDoc extends IQuestion, Document {}
 const QuestionSchema = new Schema<IQuestion>(
